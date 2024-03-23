@@ -6,7 +6,7 @@ import ru.golfstream.project.entity.Employee;
 import ru.golfstream.project.entity.Route;
 import ru.golfstream.project.entity.Voucher;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
-import ru.golfstream.project.exception.exceptions.route.TimeMismatchException;
+import ru.golfstream.project.exception.exceptions.common.TimeMismatchException;
 import ru.golfstream.project.repos.RouteRepo;
 import ru.golfstream.project.rest.dto.NewOrUpdateRouteRequest;
 import ru.golfstream.project.rest.dto.RouteDto;
@@ -49,6 +49,8 @@ public class RouteServiceImpl implements RouteService {
         Route route = routeFromDb.get();
         return buildRouteDto(route);
     }
+
+
 
     @Override
     public List<VoucherDto> getVouchersByRouteId(Integer id) {
@@ -100,7 +102,7 @@ public class RouteServiceImpl implements RouteService {
         routeRepo.deleteById(id);
     }
 
-    private static RouteDto buildRouteDto(Route route){
+    protected RouteDto buildRouteDto(Route route){
         return RouteDto.builder()
                 .arrival(route.getArrival())
                 .departure(route.getDeparture())

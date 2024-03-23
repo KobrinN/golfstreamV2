@@ -1,4 +1,4 @@
-package ru.golfstream.project.exception.exceptions;
+package ru.golfstream.project.exception.exceptions.client;
 
 import org.springframework.http.HttpStatus;
 import ru.golfstream.project.exception.exceptions.common.BaseException;
