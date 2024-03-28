@@ -2,6 +2,7 @@ package ru.golfstream.project.service;
 
 import ru.golfstream.project.entity.Route;
 import ru.golfstream.project.entity.Voucher;
+import ru.golfstream.project.rest.dto.NewOrUpdateVoucherRequest;
 import ru.golfstream.project.rest.dto.PurchaseDto;
 import ru.golfstream.project.rest.dto.VoucherDto;
 
@@ -15,4 +16,10 @@ public interface VoucherService {
     VoucherDto findById(Integer id);
 
     List<PurchaseDto> findPurchaseOfVoucher(Integer id);
+
+    Integer add(NewOrUpdateVoucherRequest request);
+
+    void deleteById(Integer id);
+
+    VoucherDto update(Integer id, NewOrUpdateVoucherRequest request);
 }

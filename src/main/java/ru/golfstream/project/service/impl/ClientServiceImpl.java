@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 import ru.golfstream.project.entity.Client;
 import ru.golfstream.project.exception.exceptions.common.EmptyFieldsException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
-import ru.golfstream.project.exception.exceptions.NotFoundVoucherOfThisClient;
+import ru.golfstream.project.exception.exceptions.client.NotFoundVoucherOfThisClient;
 import ru.golfstream.project.repos.ClientRepo;
 import ru.golfstream.project.rest.dto.VoucherOfClientDto;
 import ru.golfstream.project.rest.dto.ClientDto;

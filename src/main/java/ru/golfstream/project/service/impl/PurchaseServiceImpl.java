@@ -12,8 +12,10 @@ import ru.golfstream.project.service.PurchaseService;
 public class PurchaseServiceImpl implements PurchaseService {
     final PurchaseRepo purchaseRepo;
 
-    public static PurchaseDto buildPurchaseDto(Purchase purchase) {
+    protected static PurchaseDto buildPurchaseDto(Purchase purchase) {
         return PurchaseDto.builder()
+                .idVoucher(purchase.getIdVoucher().getId())
+                .idClient(purchase.getIdClient().getId())
                 .dateOfPurchase(purchase.getDateOfPurchase())
                 .build();
     }
