@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class NewOrUpdateEmployee {
-    private
+public class NewOrUpdateTypeRequest {
+    private Double rate;
+    private String type;
 }

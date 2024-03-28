@@ -3,11 +3,15 @@ package ru.golfstream.project.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.golfstream.project.entity.TypeEmployee;
+import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
+import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.TypeEmployeeRepo;
+import ru.golfstream.project.rest.dto.NewOrUpdateTypeRequest;
 import ru.golfstream.project.rest.dto.TypeEmployeeDto;
 import ru.golfstream.project.service.TypeEmployeeService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +25,44 @@ public class TypeEmployeeServiceImpl implements TypeEmployeeService {
         return typeEmployee.stream()
                 .map(this::buildTypeEmployeeDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer add(NewOrUpdateTypeRequest request) {
+        if(request.getRate() <= 0){
+            throw new InvlaidFieldException("Ставка не может быть <= 0!");
+        }
+        TypeEmployee typeEmployee = new TypeEmployee();
+        typeEmployee.setType(request.getType());
+        typeEmployee.setRate(request.getRate());
+
+        typeEmployeeRepo.saveAndFlush(typeEmployee);
+        return typeEmployee.getId();
+    }
+
+    @Override
+    public TypeEmployeeDto delete(Integer id) {
+        TypeEmployee typeEmployee = proofTypeExist(id);
+        typeEmployeeRepo.delete(typeEmployee);
+        return buildTypeEmployeeDto(typeEmployee);
+    }
+
+    @Override
+    public TypeEmployeeDto update(Integer id, NewOrUpdateTypeRequest request) {
+        TypeEmployee typeEmployee = proofTypeExist(id);
+
+        typeEmployee.setType(request.getType());
+        typeEmployee.setRate(request.getRate());
+
+        return buildTypeEmployeeDto(typeEmployee);
+    }
+
+    protected TypeEmployee proofTypeExist(Integer id){
+        Optional<TypeEmployee> typeEmployeeFromBd = typeEmployeeRepo.findById(id);
+        if(typeEmployeeFromBd.isEmpty()){
+            throw new NotFoundException("Нет типа работника с ID = " + id + "!");
+        }
+        return typeEmployeeFromBd.get();
     }
 
     protected TypeEmployeeDto buildTypeEmployeeDto(TypeEmployee typeEmployee){
