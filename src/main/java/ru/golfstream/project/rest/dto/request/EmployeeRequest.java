@@ -1,15 +1,15 @@
-package ru.golfstream.project.rest.dto;
+package ru.golfstream.project.rest.dto.request;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class NewOrUpdateEmployeeRequest {
+public class EmployeeRequest {
     private String name;
     private String surname;
     private String secondName;
     private String country;
-    private Integer openingHours;
-    private Integer typeId;
+    private Long openingHours;
+    private Long TypeId;
 }

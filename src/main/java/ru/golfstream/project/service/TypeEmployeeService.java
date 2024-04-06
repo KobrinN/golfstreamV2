@@ -1,6 +1,6 @@
 package ru.golfstream.project.service;
 
-import ru.golfstream.project.rest.dto.NewOrUpdateTypeRequest;
+import ru.golfstream.project.rest.dto.request.TypeRequest;
 import ru.golfstream.project.rest.dto.TypeEmployeeDto;
 
 import java.util.List;
@@ -8,9 +8,9 @@ import java.util.List;
 public interface TypeEmployeeService {
     List<TypeEmployeeDto> findAll();
 
-    Integer add(NewOrUpdateTypeRequest request);
+    Long add(TypeRequest request);
 
-    TypeEmployeeDto delete(Integer id);
+    TypeEmployeeDto delete(Long id);
 
-    TypeEmployeeDto update(Integer id, NewOrUpdateTypeRequest request);
+    TypeEmployeeDto update(Long id, TypeRequest request);
 }

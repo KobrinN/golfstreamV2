@@ -1,25 +1,27 @@
 package ru.golfstream.project.service;
 
-import ru.golfstream.project.entity.Route;
 import ru.golfstream.project.entity.Voucher;
-import ru.golfstream.project.rest.dto.NewOrUpdateVoucherRequest;
+import ru.golfstream.project.rest.dto.VoucherOfClientDto;
+import ru.golfstream.project.rest.dto.request.VoucherRequest;
 import ru.golfstream.project.rest.dto.PurchaseDto;
 import ru.golfstream.project.rest.dto.VoucherDto;
 
 import java.util.List;
 
 public interface VoucherService {
-    List<Voucher> getByRouteId(Integer id);
+    List<Voucher> getByRouteId(Long id);
 
     List<VoucherDto> findAll();
 
-    VoucherDto findById(Integer id);
+    VoucherDto findById(Long id);
 
-    List<PurchaseDto> findPurchaseOfVoucher(Integer id);
+    List<VoucherDto> getVouchersByRouteId(Long id);
 
-    Integer add(NewOrUpdateVoucherRequest request);
+    Long add(VoucherRequest request);
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
-    VoucherDto update(Integer id, NewOrUpdateVoucherRequest request);
+    VoucherDto update(Long id, VoucherRequest request);
+
+    List<VoucherOfClientDto> findVouchersOfClient(Long id);
 }

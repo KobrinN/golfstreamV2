@@ -8,6 +8,6 @@ import ru.golfstream.project.entity.Voucher;
 import java.util.List;
 
 @Repository
-public interface PurchaseRepo extends JpaRepository<Purchase, Integer> {
+public interface PurchaseRepo extends JpaRepository<Purchase, Long> {
     List<Purchase> findByIdVoucher(Voucher idVoucher);
 }

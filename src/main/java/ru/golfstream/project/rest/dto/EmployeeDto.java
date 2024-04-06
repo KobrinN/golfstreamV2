@@ -10,5 +10,5 @@ public class EmployeeDto {
     private String surname;
     private String secondName;
     private String country;
-    private Integer openingHours;
+    private Long openingHours;
 }

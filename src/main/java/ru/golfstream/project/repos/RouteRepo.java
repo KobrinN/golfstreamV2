@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.golfstream.project.entity.Route;
 
 @Repository
-public interface RouteRepo extends JpaRepository<Route, Integer> {
+public interface RouteRepo extends JpaRepository<Route, Long> {
 
 }

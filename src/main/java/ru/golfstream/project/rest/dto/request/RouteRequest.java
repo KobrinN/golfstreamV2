@@ -1,4 +1,4 @@
-package ru.golfstream.project.rest.dto;
+package ru.golfstream.project.rest.dto.request;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,11 +7,11 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class NewOrUpdateRouteRequest {
+public class RouteRequest {
     private String fromWhere;
     private String toWhere;
     private String transportation;
     private LocalDate arrival;
     private LocalDate departure;
-    private Integer idInstructor;
+    private Long idInstructor;
 }

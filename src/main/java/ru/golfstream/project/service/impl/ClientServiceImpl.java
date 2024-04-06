@@ -4,19 +4,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.golfstream.project.entity.Client;
-import ru.golfstream.project.exception.exceptions.common.EmptyFieldsException;
-import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.exception.exceptions.client.NotFoundVoucherOfThisClient;
+import ru.golfstream.project.exception.exceptions.common.EmptyFieldsException;
+import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
+import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.ClientRepo;
-import ru.golfstream.project.rest.dto.VoucherOfClientDto;
 import ru.golfstream.project.rest.dto.ClientDto;
-import ru.golfstream.project.rest.dto.NewClientRequest;
+import ru.golfstream.project.rest.dto.request.ClientRequest;
+import ru.golfstream.project.rest.dto.VoucherOfClientDto;
 import ru.golfstream.project.service.ClientService;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,17 +30,12 @@ public class ClientServiceImpl implements ClientService {
     public List<ClientDto> findAllClients() {
         List<Client> all = clientRepo.findAll();
         return all.stream()
-                .map(client -> ClientDto.builder()
-                        .name(client.getName())
-                        .surname(client.getSurname())
-                        .secondName(client.getSecondname())
-                        .mail(client.getMail())
-                        .build())
-                .toList();
+                .map(ClientServiceImpl::buildClientDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Integer addNewClient(NewClientRequest request) {
+    public Long addNewClient(ClientRequest request) {
         Pattern pattern = Pattern.compile("^[A-Z0-9+_.-]+@[A-Z0-9.-]+$");
         Matcher matcher = pattern.matcher(request.getMail());
 
@@ -46,8 +43,9 @@ public class ClientServiceImpl implements ClientService {
                 !StringUtils.hasText(request.getSurname()) ||
                 !StringUtils.hasText(request.getSecondName()) ||
                 !StringUtils.hasText(request.getMail()) ||
-                !StringUtils.hasText(request.getPassword())) {
-            throw new EmptyFieldsException("Поля некорректные!");
+                !StringUtils.hasText(request.getPassword()) ||
+                !matcher.find()) {
+            throw new InvlaidFieldException("Поля некорректные!");
         }
 
         Client client = new Client();
@@ -63,34 +61,20 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDto findById(Integer id) {
-        Optional<Client> clientFromBd = clientRepo.findById(id);
-
-        if (clientFromBd.isEmpty()) {
-            throw new NotFoundException("Не найден пользователь с ID = " + id + "!");
-        }
-
-        Client client = clientFromBd.get();
+    public ClientDto findById(Long id) {
+        Client client = proofClient(id);
         return buildClientDto(client);
     }
 
     @Override
-    public void deleteById(Integer id) {
-        if (!clientRepo.existsById(id)) {
-            throw new NotFoundException("Не найден пользователь с ID = " + id + "!");
-        }
-        clientRepo.deleteById(id);
+    public void deleteById(Long id) {
+        Client client = proofClient(id);
+        clientRepo.deleteById(client.getId());
     }
 
     @Override
-    public ClientDto edit(Integer id, ClientDto clientDto) {
-        Optional<Client> clientFromBd = clientRepo.findById(id);
-
-        if (clientFromBd.isEmpty()) {
-            throw new NotFoundException("Не найден пользователь с ID = " + id + "!");
-        }
-
-        Client client = clientFromBd.get();
+    public ClientDto edit(Long id, ClientDto clientDto) {
+        Client client = proofClient(id);
 
         client.setName(clientDto.getName());
         client.setSurname(clientDto.getSurname());
@@ -102,31 +86,21 @@ public class ClientServiceImpl implements ClientService {
         return buildClientDto(client);
     }
 
-    @Override
-    public List<VoucherOfClientDto> findVouchersOfClient(Integer id) {
-        Optional<Client> clientFromBd = clientRepo.findById(id);
-
-        if (clientFromBd.isEmpty()) {
-            throw new NotFoundException("Не найден пользователь с ID = " + id + "!");
-        }
-
-        List<VoucherOfClientDto> clientAndVoucherDtoList = clientRepo.getClientAndVoucherDto(id);
-
-        if(clientAndVoucherDtoList.isEmpty()){
-            throw new NotFoundVoucherOfThisClient("Не найдены путёвки этого пользователя!");
-        }
-
-        return clientAndVoucherDtoList;
-    }
-
     protected static ClientDto buildClientDto(Client client) {
-
         return ClientDto.builder()
                 .name(client.getName())
                 .surname(client.getSurname())
                 .secondName(client.getSecondname())
                 .mail(client.getMail())
                 .build();
+    }
+
+    private Client proofClient(Long id) throws NotFoundException{
+        Optional<Client> clientFromBd = clientRepo.findById(id);
+        if (clientFromBd.isEmpty()) {
+            throw new NotFoundException("Не найден пользователь с ID = " + id + "!");
+        }
+        return clientFromBd.get();
     }
 
 

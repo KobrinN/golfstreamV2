@@ -1,13 +1,14 @@
-package ru.golfstream.project.rest.dto;
+package ru.golfstream.project.rest.dto.request;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class VoucherDto {
+public class VoucherRequest {
     private String name;
     private Double price;
     private Long quantity;
     private Long reservation;
+    private Long idRoute;
 }
