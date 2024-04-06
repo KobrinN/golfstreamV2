@@ -24,7 +24,7 @@ public class Employee extends AbstractEntity{
     @Column(name = "country")
     private String country;
     @Column(name = "opening_hours")
-    private Integer openingHours;
+    private Long openingHours;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type", nullable = false)
     private TypeEmployee type;

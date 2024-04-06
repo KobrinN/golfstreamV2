@@ -20,9 +20,9 @@ public class Voucher extends AbstractEntity{
     @Column(name = "price")
     private Double price;
     @Column(name = "quantity")
-    private Integer quantity;
+    private Long quantity;
     @Column(name = "reservation")
-    private Integer reservation;
+    private Long reservation;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_route")
     private Route idRoute;

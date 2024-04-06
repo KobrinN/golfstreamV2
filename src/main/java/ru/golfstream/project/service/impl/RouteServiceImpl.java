@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.golfstream.project.entity.Employee;
 import ru.golfstream.project.entity.Route;
-import ru.golfstream.project.entity.Voucher;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.exception.exceptions.common.TimeMismatchException;
+import ru.golfstream.project.repos.EmployeeRepo;
 import ru.golfstream.project.repos.RouteRepo;
-import ru.golfstream.project.rest.dto.NewOrUpdateRouteRequest;
+import ru.golfstream.project.rest.dto.request.RouteRequest;
 import ru.golfstream.project.rest.dto.RouteDto;
-import ru.golfstream.project.rest.dto.VoucherDto;
-import ru.golfstream.project.service.EmployeeService;
 import ru.golfstream.project.service.RouteService;
 
 import java.util.List;
@@ -22,8 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
     private final RouteRepo routeRepo;
-    private final VoucherServiceImpl voucherService;
-    private final EmployeeService employeeService;
+    private final EmployeeRepo employeeRepo;
     @Override
     public List<RouteDto> getAll() {
         List<Route> all = routeRepo.findAll();
@@ -39,7 +36,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public RouteDto getById(Integer id) {
+    public RouteDto getById(Long id) {
         Optional<Route> routeFromDb = routeRepo.findById(id);
 
         if(routeFromDb.isEmpty()){
@@ -50,50 +47,49 @@ public class RouteServiceImpl implements RouteService {
         return buildRouteDto(route);
     }
 
-
-
     @Override
-    public List<VoucherDto> getVouchersByRouteId(Integer id) {
-        Optional<Route> routeFromDb = routeRepo.findById(id);
-
-        if(routeFromDb.isEmpty()){
-            throw new NotFoundException("Нет маршрута с id = " + id + "!");
+    public List<RouteDto> findRouteOfEmployee(Long id) {
+        Optional<Employee> employeeFromDb = employeeRepo.findById(id);
+        if(employeeFromDb.isEmpty()){
+            throw new NotFoundException("Нет работника с ID = " + id + "!");
         }
-
-        List<Voucher> voucherFromDb = voucherService.getByRouteId(id);
-        return voucherFromDb.stream()
-                .map(VoucherServiceImpl::buildVoucherDto)
+        Employee employee = employeeFromDb.get();
+        return employee.getRoutes().stream()
+                .map(this::buildRouteDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Integer add(NewOrUpdateRouteRequest request) {
-        Employee employee = employeeService.findEmployeeById(request.getIdInstructor());
+    public Long add(RouteRequest request) {
+        Optional<Employee> employeeFromDb = employeeRepo.findById(request.getIdInstructor());
+        if(employeeFromDb.isEmpty()){
+            throw new NotFoundException("Нет работника с ID = " + request.getIdInstructor() + "!");
+        }
         if(request.getArrival().isAfter(request.getDeparture())){
             throw new TimeMismatchException("Время отправление позже времени прибытия!");
         }
-        Route route = buildRoute(employee, request);
+        Route route = buildRoute(employeeFromDb.get(), request);
         routeRepo.saveAndFlush(route);
         return route.getId();
     }
 
     @Override
-    public RouteDto updateById(Integer id, NewOrUpdateRouteRequest request) {
+    public RouteDto updateById(Long id, RouteRequest request) {
         Optional<Route> route = routeRepo.findById(id);
-        Employee employee = employeeService.findEmployeeById(request.getIdInstructor());
-        if(route.isEmpty()){
-            throw new NotFoundException("Нет такого маршрута!");
+        Optional<Employee> employeeFromDb = employeeRepo.findById(request.getIdInstructor());
+        if(employeeFromDb.isEmpty()){
+            throw new NotFoundException("Нет работника с ID = " + 1 + "!");
         }
 
         Route routeFromDb = route.get();
-        routeFromDb = buildRoute(employee, request);
+        routeFromDb = buildRoute(employeeFromDb.get(), request);
         routeRepo.saveAndFlush(routeFromDb);
 
         return buildRouteDto(routeFromDb);
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         Optional<Route> routeFromDb = routeRepo.findById(id);
         if(routeFromDb.isEmpty()){
             throw new NotFoundException("Нет такого маршрута!");
@@ -112,7 +108,7 @@ public class RouteServiceImpl implements RouteService {
                 .build();
     }
 
-    private static Route buildRoute(Employee employee, NewOrUpdateRouteRequest request){
+    private static Route buildRoute(Employee employee, RouteRequest request){
         Route route = new Route();
         route.setArrival(request.getArrival());
         route.setDeparture(request.getDeparture());

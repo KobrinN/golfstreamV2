@@ -1,21 +1,20 @@
 package ru.golfstream.project.service;
 
-import ru.golfstream.project.rest.dto.NewOrUpdateRouteRequest;
+import ru.golfstream.project.rest.dto.request.RouteRequest;
 import ru.golfstream.project.rest.dto.RouteDto;
-import ru.golfstream.project.rest.dto.VoucherDto;
 
 import java.util.List;
 
 public interface RouteService {
     List<RouteDto> getAll();
 
-    RouteDto getById(Integer id);
+    RouteDto getById(Long id);
 
-    List<VoucherDto> getVouchersByRouteId(Integer id);
+    List<RouteDto> findRouteOfEmployee(Long id);
 
-    Integer add(NewOrUpdateRouteRequest newOrUpdateRouteRequest);
+    Long add(RouteRequest routeRequest);
 
-    RouteDto updateById(Integer id, NewOrUpdateRouteRequest request);
+    RouteDto updateById(Long id, RouteRequest request);
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 }

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.golfstream.project.entity.Employee;
 
 @Repository
-public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
+public interface EmployeeRepo extends JpaRepository<Employee, Long> {
 }

@@ -10,7 +10,7 @@ import ru.golfstream.project.entity.Voucher;
 import java.util.List;
 
 @Repository
-public interface VoucherRepo extends JpaRepository<Voucher, Integer> {
-    @Query(value = "select * from voucher where id_route = ?1", nativeQuery = true)
-    List<Voucher> findByRouteId(Integer id);
+public interface VoucherRepo extends JpaRepository<Voucher, Long> {
+
+    List<Voucher> findByIdRoute(Route idRoute);
 }

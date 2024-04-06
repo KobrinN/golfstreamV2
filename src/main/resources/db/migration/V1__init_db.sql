@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS public.client
 (
-    id serial NOT NULL,
+    id bigserial NOT NULL,
     name character varying(100)[] NOT NULL,
     surname character varying(100)[] NOT NULL,
     secondname character varying(100)[] NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.client
 
 CREATE TABLE IF NOT EXISTS public.type_employee
 (
-    id serial NOT NULL,
+    id bigserial NOT NULL,
     type character varying(100)[] NOT NULL,
     rate double precision NOT NULL,
     PRIMARY KEY (id)
@@ -20,44 +20,44 @@ CREATE TABLE IF NOT EXISTS public.type_employee
 
 CREATE TABLE IF NOT EXISTS public.employee
 (
-    id serial NOT NULL,
+    id bigserial NOT NULL,
     name character varying(100)[] NOT NULL,
     surname character varying(100)[] NOT NULL,
     secondname character varying(100)[] NOT NULL,
-    type integer NOT NULL,
+    type bigint NOT NULL,
     country character varying(100)[],
-    opening_hours integer,
+    opening_hours bigint,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS public.route
 (
-    id serial NOT NULL,
+    id bigserial NOT NULL,
     from_where character varying(100)[],
     to_where character varying(100)[],
     departure date,
     arrival date,
     transportation character varying(100)[],
-    id_instructor integer,
+    id_instructor bigint,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS public.voucher
 (
-    id serial NOT NULL,
-    id_route integer,
+    id bigserial NOT NULL,
+    id_route bigint,
     name character varying(100)[],
     price double precision,
-    quantity integer,
-    reservation integer,
+    quantity bigint,
+    reservation bigint,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS public.purchase
 (
-    id serial NOT NULL,
-    id_client integer,
-    id_voucher integer,
+    id bigserial NOT NULL,
+    id_client bigint,
+    id_voucher bigint,
     date_of_purchase date,
     PRIMARY KEY (id)
 );
