@@ -4,16 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.golfstream.project.rest.dto.request.VoucherRequest;
 import ru.golfstream.project.rest.dto.PurchaseDto;
 import ru.golfstream.project.rest.dto.VoucherDto;
+import ru.golfstream.project.rest.dto.request.VoucherRequest;
 import ru.golfstream.project.service.PurchaseService;
 import ru.golfstream.project.service.VoucherService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/voucher")
+@RequestMapping("/api/v1/voucher")
 @RequiredArgsConstructor
 public class VoucherController {
     private final VoucherService voucherService;

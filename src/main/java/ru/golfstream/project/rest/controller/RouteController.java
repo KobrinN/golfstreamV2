@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.golfstream.project.rest.dto.request.RouteRequest;
 import ru.golfstream.project.rest.dto.RouteDto;
 import ru.golfstream.project.rest.dto.VoucherDto;
+import ru.golfstream.project.rest.dto.request.RouteRequest;
 import ru.golfstream.project.service.RouteService;
 import ru.golfstream.project.service.VoucherService;
 

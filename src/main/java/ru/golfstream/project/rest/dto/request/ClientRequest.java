@@ -6,9 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class ClientRequest {
-    String name;
-    String surname;
-    String secondName;
+    String username;
     String mail;
     String password;
 }

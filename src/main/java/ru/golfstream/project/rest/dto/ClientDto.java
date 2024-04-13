@@ -8,8 +8,6 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class ClientDto {
-    private String name;
-    private String surname;
-    private String secondName;
+    private String username;
     private String mail;
 }

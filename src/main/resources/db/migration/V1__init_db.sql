@@ -1,9 +1,7 @@
 CREATE TABLE IF NOT EXISTS public.client
 (
     id bigserial NOT NULL,
-    name character varying(100)[] NOT NULL,
-    surname character varying(100)[] NOT NULL,
-    secondname character varying(100)[] NOT NULL,
+    username character varying(100)[] NOT NULL,
     mail character varying(100)[] NOT NULL,
     password character varying(100)[] NOT NULL,
     registration_date date,

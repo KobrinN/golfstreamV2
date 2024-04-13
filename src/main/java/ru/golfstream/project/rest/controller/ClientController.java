@@ -3,11 +3,11 @@ package ru.golfstream.project.rest.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.golfstream.project.rest.dto.ClientDto;
 import ru.golfstream.project.rest.dto.PurchaseDto;
 import ru.golfstream.project.rest.dto.VoucherDto;
-import ru.golfstream.project.rest.dto.VoucherOfClientDto;
-import ru.golfstream.project.rest.dto.ClientDto;
 import ru.golfstream.project.rest.dto.request.ClientRequest;
 import ru.golfstream.project.service.ClientService;
 import ru.golfstream.project.service.PurchaseService;
@@ -35,16 +35,18 @@ public class ClientController {
     }
 
     @GetMapping("/{id}/vouchers")
-    public ResponseEntity<List<VoucherOfClientDto>> getClientAndHisVouchers(@PathVariable Long id){
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<VoucherDto>> getClientAndHisVouchers(@PathVariable Long id){
         return ResponseEntity.ok(voucherService.findVouchersOfClient(id));
     }
 
     @PostMapping("/{idClient}/purchase/{idVoucher}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PurchaseDto> buyVoucher(@PathVariable Long idClient, @PathVariable Long idVoucher){
         return ResponseEntity.status(HttpStatus.CREATED).body(purchaseService.buy(idClient, idVoucher));
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Long> add(@RequestBody ClientRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.addNewClient(request));
     }
@@ -56,7 +58,8 @@ public class ClientController {
     }
 
     @DeleteMapping("/purchase/{id}")
-    public ResponseEntity<?> refuseThePurchase(@RequestBody Long id){
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> refuseThePurchase(@PathVariable Long id){
         purchaseService.delete(id);
         return ResponseEntity.ok().build();
     }
