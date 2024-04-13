@@ -1,11 +1,13 @@
 package ru.golfstream.project.rest.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Builder
 public class VoucherOfClientDto{
-    private String nameOfVoucher;
+    private String name;
     private Double price;
 }

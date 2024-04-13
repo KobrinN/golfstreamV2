@@ -28,4 +28,11 @@ public class Voucher extends AbstractEntity{
     private Route idRoute;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "idVoucher",cascade = CascadeType.REMOVE)
     private List<Purchase> purchases;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "purchase",
+            joinColumns = @JoinColumn(name = "id_voucher"),
+            inverseJoinColumns = @JoinColumn(name = "id_client")
+    )
+    private List<Client> clients;
 }

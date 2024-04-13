@@ -23,5 +23,5 @@ public interface VoucherService {
 
     VoucherDto update(Long id, VoucherRequest request);
 
-    List<VoucherOfClientDto> findVouchersOfClient(Long id);
+    List<VoucherDto> findVouchersOfClient(Long id);
 }

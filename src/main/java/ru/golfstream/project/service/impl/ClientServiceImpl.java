@@ -39,19 +39,15 @@ public class ClientServiceImpl implements ClientService {
         Pattern pattern = Pattern.compile("^[A-Z0-9+_.-]+@[A-Z0-9.-]+$");
         Matcher matcher = pattern.matcher(request.getMail());
 
-        if (!StringUtils.hasText(request.getName()) ||
-                !StringUtils.hasText(request.getSurname()) ||
-                !StringUtils.hasText(request.getSecondName()) ||
-                !StringUtils.hasText(request.getMail()) ||
-                !StringUtils.hasText(request.getPassword()) ||
-                !matcher.find()) {
+        if (!StringUtils.hasText(request.getUsername()) ||
+                StringUtils.hasText(request.getMail()) ||
+                StringUtils.hasText(request.getPassword()) ||
+                matcher.find()) {
             throw new InvlaidFieldException("Поля некорректные!");
         }
 
         Client client = new Client();
-        client.setName(request.getName());
-        client.setSurname(request.getSurname());
-        client.setSecondname(request.getSecondName());
+        client.setUsername(request.getUsername());
         client.setMail(request.getMail());
         client.setPassword(request.getPassword());
 
@@ -76,9 +72,7 @@ public class ClientServiceImpl implements ClientService {
     public ClientDto edit(Long id, ClientDto clientDto) {
         Client client = proofClient(id);
 
-        client.setName(clientDto.getName());
-        client.setSurname(clientDto.getSurname());
-        client.setSecondname(client.getSecondname());
+        client.setUsername(clientDto.getUsername());
         client.setMail(clientDto.getMail());
 
         clientRepo.saveAndFlush(client);
@@ -88,9 +82,7 @@ public class ClientServiceImpl implements ClientService {
 
     protected static ClientDto buildClientDto(Client client) {
         return ClientDto.builder()
-                .name(client.getName())
-                .surname(client.getSurname())
-                .secondName(client.getSecondname())
+                .username(client.getUsername())
                 .mail(client.getMail())
                 .build();
     }

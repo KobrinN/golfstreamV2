@@ -3,7 +3,6 @@ package ru.golfstream.project.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.golfstream.project.entity.Client;
-import ru.golfstream.project.entity.Purchase;
 import ru.golfstream.project.entity.Route;
 import ru.golfstream.project.entity.Voucher;
 import ru.golfstream.project.exception.exceptions.client.NotFoundVoucherOfThisClient;
@@ -15,7 +14,6 @@ import ru.golfstream.project.repos.RouteRepo;
 import ru.golfstream.project.repos.VoucherRepo;
 import ru.golfstream.project.rest.dto.VoucherOfClientDto;
 import ru.golfstream.project.rest.dto.request.VoucherRequest;
-import ru.golfstream.project.rest.dto.PurchaseDto;
 import ru.golfstream.project.rest.dto.VoucherDto;
 import ru.golfstream.project.service.VoucherService;
 
@@ -121,18 +119,20 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public List<VoucherOfClientDto> findVouchersOfClient(Long id) {
+    public List<VoucherDto> findVouchersOfClient(Long id) {
         Optional<Client> clientFromBd = clientRepo.findById(id);
         if(clientFromBd.isEmpty()){
             throw new NotFoundException("Нет пользователя с ID = "+ id + "!");
         }
-        List<VoucherOfClientDto> clientAndVoucherDtoList = clientRepo.getClientAndVoucherDto(id);
+        List<Voucher> clientAndVoucherDtoList = clientRepo.getVoucherOfClientDto(id);
 
         if (clientAndVoucherDtoList.isEmpty()) {
             throw new NotFoundVoucherOfThisClient("Не найдены путёвки этого пользователя!");
         }
 
-        return clientAndVoucherDtoList;
+        return clientAndVoucherDtoList.stream()
+                .map(VoucherServiceImpl::buildVoucherDto)
+                .collect(Collectors.toList());
     }
 
     protected static VoucherDto buildVoucherDto(Voucher voucher) {

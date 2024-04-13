@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.golfstream.project.rest.dto.*;
+import ru.golfstream.project.rest.dto.EmployeeDto;
+import ru.golfstream.project.rest.dto.RouteDto;
+import ru.golfstream.project.rest.dto.TypeEmployeeDto;
 import ru.golfstream.project.rest.dto.request.EmployeeRequest;
 import ru.golfstream.project.rest.dto.request.TypeRequest;
 import ru.golfstream.project.service.EmployeeService;
@@ -14,7 +16,7 @@ import ru.golfstream.project.service.TypeEmployeeService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/api/v1/employee")
 @RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeService employeeService;
