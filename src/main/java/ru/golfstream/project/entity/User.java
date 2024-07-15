@@ -13,6 +13,11 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "user-role-graph", attributeNodes = @NamedAttributeNode("roles")),
+        @NamedEntityGraph(name = "user-voucher-graph", attributeNodes = @NamedAttributeNode("vouchers")),
+        @NamedEntityGraph(name = "user-purchase-graph", attributeNodes = @NamedAttributeNode("purchases"))
+})
 public class User extends AbstractEntity{
     @Column(name = "username", nullable = false)
     private String username;

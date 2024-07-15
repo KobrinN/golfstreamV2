@@ -12,6 +12,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "route-employee-graph", attributeNodes = @NamedAttributeNode("instructor")),
+        @NamedEntityGraph(name = "route-vouchers-graph", attributeNodes = @NamedAttributeNode("vouchers"))
+})
 public class Route extends AbstractEntity{
     @Column(name = "from_where")
     private String fromWhere;

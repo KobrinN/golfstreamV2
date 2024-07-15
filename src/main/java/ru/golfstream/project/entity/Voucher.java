@@ -11,6 +11,11 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "voucher-route-graph", attributeNodes = @NamedAttributeNode("route")),
+        @NamedEntityGraph(name = "voucher-purchase-graph", attributeNodes = @NamedAttributeNode("purchases")),
+        @NamedEntityGraph(name = "voucher-user-graph", attributeNodes = @NamedAttributeNode("users"))
+})
 public class Voucher extends AbstractEntity{
     @Column(name = "name", nullable = false)
     private String name;
