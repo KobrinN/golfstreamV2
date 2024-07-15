@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Employee extends AbstractEntity{
     @Column(name = "name", nullable = false)
     private String name;

@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

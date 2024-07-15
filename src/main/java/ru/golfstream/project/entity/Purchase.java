@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Purchase extends AbstractEntity{
     @Column(name = "date_of_purchase")
     private LocalDate dateOfPurchase;

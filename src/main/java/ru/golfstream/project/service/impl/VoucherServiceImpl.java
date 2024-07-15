@@ -30,7 +30,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public List<Voucher> getByRouteId(Long id) {
-        return voucherRepo.findByIdRoute(routeRepo.findById(id).get());
+        return voucherRepo.findByRoute(routeRepo.findById(id).get());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class VoucherServiceImpl implements VoucherService {
             throw new NotFoundException("Нет маршрута с id = " + id + "!");
         }
 
-        List<Voucher> voucherFromDb = voucherRepo.findByIdRoute(routeFromDb.get());
+        List<Voucher> voucherFromDb = voucherRepo.findByRoute(routeFromDb.get());
         return voucherFromDb.stream()
                 .map(VoucherServiceImpl::buildVoucherDto)
                 .collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setPrice(request.getPrice());
         voucher.setQuantity(request.getQuantity());
         voucher.setReservation(request.getReservation());
-        voucher.setIdRoute(routeFromDb.get());
+        voucher.setRoute(routeFromDb.get());
 
         voucherRepo.saveAndFlush(voucher);
         return voucher.getId();
@@ -110,7 +110,7 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setPrice(request.getPrice());
         voucher.setQuantity(request.getQuantity());
         voucher.setReservation(request.getReservation());
-        voucher.setIdRoute(routeFromDb.get());
+        voucher.setRoute(routeFromDb.get());
 
 
 
