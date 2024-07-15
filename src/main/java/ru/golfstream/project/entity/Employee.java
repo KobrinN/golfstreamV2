@@ -1,10 +1,7 @@
 package ru.golfstream.project.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,20 +11,21 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Employee extends AbstractEntity{
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "surname", nullable = false, length = 100)
+    @Column(name = "surname", nullable = false)
     private String surname;
-    @Column(name = "secondname", nullable = false, length = 100)
+    @Column(name = "secondname", nullable = false)
     private String secondname;
     @Column(name = "country")
     private String country;
     @Column(name = "opening_hours")
     private Long openingHours;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "type", nullable = false)
     private TypeEmployee type;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "idInstructor")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "instructor")
     private List<Route> routes;
 }

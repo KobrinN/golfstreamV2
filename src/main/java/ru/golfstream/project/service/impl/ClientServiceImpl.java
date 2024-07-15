@@ -3,15 +3,12 @@ package ru.golfstream.project.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import ru.golfstream.project.entity.Client;
-import ru.golfstream.project.exception.exceptions.client.NotFoundVoucherOfThisClient;
-import ru.golfstream.project.exception.exceptions.common.EmptyFieldsException;
+import ru.golfstream.project.entity.User;
 import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.ClientRepo;
 import ru.golfstream.project.rest.dto.ClientDto;
 import ru.golfstream.project.rest.dto.request.ClientRequest;
-import ru.golfstream.project.rest.dto.VoucherOfClientDto;
 import ru.golfstream.project.service.ClientService;
 
 import java.util.List;
@@ -28,7 +25,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public List<ClientDto> findAllClients() {
-        List<Client> all = clientRepo.findAll();
+        List<User> all = clientRepo.findAll();
         return all.stream()
                 .map(ClientServiceImpl::buildClientDto)
                 .collect(Collectors.toList());
@@ -46,7 +43,7 @@ public class ClientServiceImpl implements ClientService {
             throw new InvlaidFieldException("Поля некорректные!");
         }
 
-        Client client = new Client();
+        User client = new User();
         client.setUsername(request.getUsername());
         client.setMail(request.getMail());
         client.setPassword(request.getPassword());
@@ -58,19 +55,19 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDto findById(Long id) {
-        Client client = proofClient(id);
+        User client = proofClient(id);
         return buildClientDto(client);
     }
 
     @Override
     public void deleteById(Long id) {
-        Client client = proofClient(id);
+        User client = proofClient(id);
         clientRepo.deleteById(client.getId());
     }
 
     @Override
     public ClientDto edit(Long id, ClientDto clientDto) {
-        Client client = proofClient(id);
+        User client = proofClient(id);
 
         client.setUsername(clientDto.getUsername());
         client.setMail(clientDto.getMail());
@@ -80,15 +77,15 @@ public class ClientServiceImpl implements ClientService {
         return buildClientDto(client);
     }
 
-    protected static ClientDto buildClientDto(Client client) {
+    protected static ClientDto buildClientDto(User client) {
         return ClientDto.builder()
                 .username(client.getUsername())
                 .mail(client.getMail())
                 .build();
     }
 
-    private Client proofClient(Long id) throws NotFoundException{
-        Optional<Client> clientFromBd = clientRepo.findById(id);
+    private User proofClient(Long id) throws NotFoundException{
+        Optional<User> clientFromBd = clientRepo.findById(id);
         if (clientFromBd.isEmpty()) {
             throw new NotFoundException("Не найден пользователь с ID = " + id + "!");
         }

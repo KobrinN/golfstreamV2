@@ -2,7 +2,7 @@ package ru.golfstream.project.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.golfstream.project.entity.Client;
+import ru.golfstream.project.entity.User;
 import ru.golfstream.project.entity.Route;
 import ru.golfstream.project.entity.Voucher;
 import ru.golfstream.project.exception.exceptions.client.NotFoundVoucherOfThisClient;
@@ -12,7 +12,6 @@ import ru.golfstream.project.repos.ClientRepo;
 import ru.golfstream.project.repos.PurchaseRepo;
 import ru.golfstream.project.repos.RouteRepo;
 import ru.golfstream.project.repos.VoucherRepo;
-import ru.golfstream.project.rest.dto.VoucherOfClientDto;
 import ru.golfstream.project.rest.dto.request.VoucherRequest;
 import ru.golfstream.project.rest.dto.VoucherDto;
 import ru.golfstream.project.service.VoucherService;
@@ -120,7 +119,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public List<VoucherDto> findVouchersOfClient(Long id) {
-        Optional<Client> clientFromBd = clientRepo.findById(id);
+        Optional<User> clientFromBd = clientRepo.findById(id);
         if(clientFromBd.isEmpty()){
             throw new NotFoundException("Нет пользователя с ID = "+ id + "!");
         }

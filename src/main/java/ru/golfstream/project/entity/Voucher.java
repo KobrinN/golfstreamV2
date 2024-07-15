@@ -1,10 +1,7 @@
 package ru.golfstream.project.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -14,8 +11,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Voucher extends AbstractEntity{
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "price")
     private Double price;
@@ -23,16 +21,16 @@ public class Voucher extends AbstractEntity{
     private Long quantity;
     @Column(name = "reservation")
     private Long reservation;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_route")
-    private Route idRoute;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "idVoucher",cascade = CascadeType.REMOVE)
+    private Route route;
+    @OneToMany(mappedBy = "voucher",cascade = CascadeType.REMOVE)
     private List<Purchase> purchases;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "purchase",
-            joinColumns = @JoinColumn(name = "id_voucher"),
-            inverseJoinColumns = @JoinColumn(name = "id_client")
+            joinColumns = @JoinColumn(name = "voucher_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<Client> clients;
+    private List<User> users;
 }
