@@ -12,20 +12,21 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Route extends AbstractEntity{
-    @Column(name = "from_where", length = 100)
+    @Column(name = "from_where")
     private String fromWhere;
-    @Column(name = "to_where", length = 100)
+    @Column(name = "to_where")
     private String toWhere;
     @Column(name = "departure")
     private LocalDate departure;
     @Column(name = "arrival")
     private LocalDate arrival;
-    @Column(name = "transportation", length = 100)
+    @Column(name = "transportation")
     private String transportation;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_instructor")
-    private Employee idInstructor;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "idRoute", cascade = CascadeType.ALL)
+    private Employee instructor;
+    @OneToMany(mappedBy = "route", cascade = CascadeType.REMOVE)
     private List<Voucher> vouchers;
 }

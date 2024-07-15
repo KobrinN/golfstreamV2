@@ -2,7 +2,7 @@ package ru.golfstream.project.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.golfstream.project.entity.Client;
+import ru.golfstream.project.entity.User;
 import ru.golfstream.project.entity.Purchase;
 import ru.golfstream.project.entity.Voucher;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
@@ -14,7 +14,6 @@ import ru.golfstream.project.rest.dto.PurchaseDto;
 import ru.golfstream.project.service.PurchaseService;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,7 +39,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public PurchaseDto buy(Long idClient, Long idVoucher) {
-        Optional<Client> clientFromDb = clientRepo.findById(idClient);
+        Optional<User> clientFromDb = clientRepo.findById(idClient);
         Optional<Voucher> voucherFromDb = voucherRepo.findById(idVoucher);
         if(clientFromDb.isEmpty()){
             throw new NotFoundException("Нет клиента с ID = " + idClient + "!");

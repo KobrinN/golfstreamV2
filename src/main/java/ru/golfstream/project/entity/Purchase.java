@@ -1,10 +1,7 @@
 package ru.golfstream.project.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -14,13 +11,14 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Purchase extends AbstractEntity{
     @Column(name = "date_of_purchase")
     private LocalDate dateOfPurchase;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_voucher", nullable = false)
-    private Voucher idVoucher;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_client", nullable = false)
-    private Client idClient;
+    @ManyToOne
+    @JoinColumn(name = "voucher_id", nullable = false)
+    private Voucher voucher;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
