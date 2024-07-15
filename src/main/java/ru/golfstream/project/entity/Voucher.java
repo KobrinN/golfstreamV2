@@ -11,7 +11,11 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "voucher-route-graph", attributeNodes = @NamedAttributeNode("route")),
+        @NamedEntityGraph(name = "voucher-purchase-graph", attributeNodes = @NamedAttributeNode("purchases")),
+        @NamedEntityGraph(name = "voucher-user-graph", attributeNodes = @NamedAttributeNode("users"))
+})
 public class Voucher extends AbstractEntity{
     @Column(name = "name", nullable = false)
     private String name;
@@ -22,7 +26,7 @@ public class Voucher extends AbstractEntity{
     @Column(name = "reservation")
     private Long reservation;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_route")
+    @JoinColumn(name = "route_id")
     private Route route;
     @OneToMany(mappedBy = "voucher",cascade = CascadeType.REMOVE)
     private List<Purchase> purchases;

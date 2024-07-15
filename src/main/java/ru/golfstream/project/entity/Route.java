@@ -12,7 +12,10 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "route-employee-graph", attributeNodes = @NamedAttributeNode("instructor")),
+        @NamedEntityGraph(name = "route-vouchers-graph", attributeNodes = @NamedAttributeNode("vouchers"))
+})
 public class Route extends AbstractEntity{
     @Column(name = "from_where")
     private String fromWhere;
@@ -25,7 +28,7 @@ public class Route extends AbstractEntity{
     @Column(name = "transportation")
     private String transportation;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_instructor")
+    @JoinColumn(name = "instructor_id")
     private Employee instructor;
     @OneToMany(mappedBy = "route", cascade = CascadeType.REMOVE)
     private List<Voucher> vouchers;

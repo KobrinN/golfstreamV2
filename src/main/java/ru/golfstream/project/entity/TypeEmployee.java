@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class TypeEmployee extends AbstractEntity{
     @Column(name = "type", nullable = false, length = 100)
     private String type;

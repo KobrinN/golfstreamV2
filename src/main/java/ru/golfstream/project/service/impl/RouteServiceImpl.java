@@ -115,7 +115,7 @@ public class RouteServiceImpl implements RouteService {
         route.setFromWhere(request.getFromWhere());
         route.setToWhere(request.getToWhere());
         route.setTransportation(request.getTransportation());
-        route.setIdInstructor(employee);
+        route.setInstructor(employee);
 
         return route;
     }

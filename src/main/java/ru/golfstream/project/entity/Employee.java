@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
+@NamedEntityGraph(name = "employee-route-graph", attributeNodes = @NamedAttributeNode("routes"))
 public class Employee extends AbstractEntity{
     @Column(name = "name", nullable = false)
     private String name;

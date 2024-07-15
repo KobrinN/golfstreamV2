@@ -31,7 +31,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         if(voucherFromDb.isEmpty()){
             throw new NotFoundException("Нет путёвки с ID = " + id + "!");
         }
-        List<Purchase> purchases = purchaseRepo.findByIdVoucher(voucherFromDb.get());
+        List<Purchase> purchases = purchaseRepo.findByVoucher(voucherFromDb.get());
         return purchases.stream()
                 .map(PurchaseServiceImpl::buildPurchaseDto)
                 .collect(Collectors.toList());
@@ -56,8 +56,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         voucherRepo.saveAndFlush(voucher);
 
         Purchase purchase = new Purchase();
-        purchase.setIdClient(clientFromDb.get());
-        purchase.setIdVoucher(voucherFromDb.get());
+        purchase.setUser(clientFromDb.get());
+        purchase.setVoucher(voucherFromDb.get());
         purchase.setDateOfPurchase(LocalDate.now());
         purchaseRepo.saveAndFlush(purchase);
 
@@ -71,8 +71,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     protected static PurchaseDto buildPurchaseDto(Purchase purchase) {
         return PurchaseDto.builder()
-                .idVoucher(purchase.getIdVoucher().getId())
-                .idClient(purchase.getIdClient().getId())
+                .idVoucher(purchase.getVoucher().getId())
+                .idClient(purchase.getUser().getId())
                 .dateOfPurchase(purchase.getDateOfPurchase())
                 .build();
     }

@@ -15,9 +15,9 @@ public interface ClientRepo  extends JpaRepository<User, Long> {
     @Query(value = "select v.name as name, v.price as price " +
             "from purchase p " +
             "join client c " +
-            "on p.id_client = c.id " +
+            "on p.user_id = c.id " +
             "join voucher v " +
-            "on p.id_voucher = v.id " +
+            "on p.voucher_id = v.id " +
             "where c.id = :id", nativeQuery = true)
     List<Voucher> getVoucherOfClientDto(@Param("id") Long id);
 

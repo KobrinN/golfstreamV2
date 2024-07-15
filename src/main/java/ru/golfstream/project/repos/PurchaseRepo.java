@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PurchaseRepo extends JpaRepository<Purchase, Long> {
-    List<Purchase> findByIdVoucher(Voucher idVoucher);
+    List<Purchase> findByVoucher(Voucher idVoucher);
 }
