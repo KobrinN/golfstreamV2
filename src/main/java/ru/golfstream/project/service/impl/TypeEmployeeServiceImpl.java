@@ -7,7 +7,7 @@ import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.TypeEmployeeRepo;
 import ru.golfstream.project.rest.dto.request.TypeRequest;
-import ru.golfstream.project.rest.dto.TypeEmployeeDto;
+import ru.golfstream.project.rest.dto.response.TypeEmployeeDto;
 import ru.golfstream.project.service.TypeEmployeeService;
 
 import java.util.List;

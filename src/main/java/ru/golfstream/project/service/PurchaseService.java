@@ -1,6 +1,6 @@
 package ru.golfstream.project.service;
 
-import ru.golfstream.project.rest.dto.PurchaseDto;
+import ru.golfstream.project.rest.dto.response.PurchaseDto;
 
 import java.util.List;
 

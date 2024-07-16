@@ -1,5 +1,6 @@
 package ru.golfstream.project.repos;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClientRepo  extends JpaRepository<User, Long> {
+public interface UserRepo extends JpaRepository<User, Long> {
     @Query(value = "select v.name as name, v.price as price " +
             "from purchase p " +
             "join client c " +
@@ -21,6 +22,7 @@ public interface ClientRepo  extends JpaRepository<User, Long> {
             "where c.id = :id", nativeQuery = true)
     List<Voucher> getVoucherOfClientDto(@Param("id") Long id);
 
+    @EntityGraph(value = "user-role-graph")
     Optional<User> findByUsername(String username);
 }
 

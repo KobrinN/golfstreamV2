@@ -1,7 +1,7 @@
 package ru.golfstream.project.service;
 
 import ru.golfstream.project.rest.dto.request.TypeRequest;
-import ru.golfstream.project.rest.dto.TypeEmployeeDto;
+import ru.golfstream.project.rest.dto.response.TypeEmployeeDto;
 
 import java.util.List;
 

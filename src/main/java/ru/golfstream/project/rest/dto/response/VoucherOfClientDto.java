@@ -1,4 +1,4 @@
-package ru.golfstream.project.rest.dto;
+package ru.golfstream.project.rest.dto.response;
 
 import lombok.*;
 

@@ -7,7 +7,7 @@ import ru.golfstream.project.entity.TypeEmployee;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.EmployeeRepo;
 import ru.golfstream.project.repos.TypeEmployeeRepo;
-import ru.golfstream.project.rest.dto.EmployeeDto;
+import ru.golfstream.project.rest.dto.response.EmployeeDto;
 import ru.golfstream.project.rest.dto.request.EmployeeRequest;
 import ru.golfstream.project.service.EmployeeService;
 

@@ -1,7 +1,6 @@
 package ru.golfstream.project.service;
 
-import ru.golfstream.project.rest.dto.VoucherOfClientDto;
-import ru.golfstream.project.rest.dto.ClientDto;
+import ru.golfstream.project.rest.dto.response.ClientDto;
 import ru.golfstream.project.rest.dto.request.ClientRequest;
 
 import java.util.List;
