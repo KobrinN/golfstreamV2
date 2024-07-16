@@ -1,7 +1,7 @@
 package ru.golfstream.project.service;
 
 import ru.golfstream.project.rest.dto.request.RouteRequest;
-import ru.golfstream.project.rest.dto.RouteDto;
+import ru.golfstream.project.rest.dto.response.RouteDto;
 
 import java.util.List;
 

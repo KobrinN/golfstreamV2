@@ -7,10 +7,10 @@ import ru.golfstream.project.entity.Purchase;
 import ru.golfstream.project.entity.Voucher;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.exception.exceptions.voucher.FillVoucherException;
-import ru.golfstream.project.repos.ClientRepo;
+import ru.golfstream.project.repos.UserRepo;
 import ru.golfstream.project.repos.PurchaseRepo;
 import ru.golfstream.project.repos.VoucherRepo;
-import ru.golfstream.project.rest.dto.PurchaseDto;
+import ru.golfstream.project.rest.dto.response.PurchaseDto;
 import ru.golfstream.project.service.PurchaseService;
 
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class PurchaseServiceImpl implements PurchaseService {
     final PurchaseRepo purchaseRepo;
     private final VoucherRepo voucherRepo;
-    private final ClientRepo clientRepo;
+    private final UserRepo clientRepo;
 
     @Override
     public List<PurchaseDto> findPurchaseOfVoucher(Long id) {

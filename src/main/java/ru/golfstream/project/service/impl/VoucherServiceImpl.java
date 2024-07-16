@@ -8,12 +8,12 @@ import ru.golfstream.project.entity.Voucher;
 import ru.golfstream.project.exception.exceptions.client.NotFoundVoucherOfThisClient;
 import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
-import ru.golfstream.project.repos.ClientRepo;
+import ru.golfstream.project.repos.UserRepo;
 import ru.golfstream.project.repos.PurchaseRepo;
 import ru.golfstream.project.repos.RouteRepo;
 import ru.golfstream.project.repos.VoucherRepo;
 import ru.golfstream.project.rest.dto.request.VoucherRequest;
-import ru.golfstream.project.rest.dto.VoucherDto;
+import ru.golfstream.project.rest.dto.response.VoucherDto;
 import ru.golfstream.project.service.VoucherService;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class VoucherServiceImpl implements VoucherService {
-    private final ClientRepo clientRepo;
+    private final UserRepo clientRepo;
     private final VoucherRepo voucherRepo;
     private final PurchaseRepo purchaseRepo;
     private final RouteRepo routeRepo;

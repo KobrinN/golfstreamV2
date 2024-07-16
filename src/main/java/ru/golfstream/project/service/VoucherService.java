@@ -1,10 +1,8 @@
 package ru.golfstream.project.service;
 
 import ru.golfstream.project.entity.Voucher;
-import ru.golfstream.project.rest.dto.VoucherOfClientDto;
 import ru.golfstream.project.rest.dto.request.VoucherRequest;
-import ru.golfstream.project.rest.dto.PurchaseDto;
-import ru.golfstream.project.rest.dto.VoucherDto;
+import ru.golfstream.project.rest.dto.response.VoucherDto;
 
 import java.util.List;
 

@@ -6,8 +6,8 @@ import org.springframework.util.StringUtils;
 import ru.golfstream.project.entity.User;
 import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
-import ru.golfstream.project.repos.ClientRepo;
-import ru.golfstream.project.rest.dto.ClientDto;
+import ru.golfstream.project.repos.UserRepo;
+import ru.golfstream.project.rest.dto.response.ClientDto;
 import ru.golfstream.project.rest.dto.request.ClientRequest;
 import ru.golfstream.project.service.ClientService;
 
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
 
-    private final ClientRepo clientRepo;
+    private final UserRepo clientRepo;
 
     @Override
     public List<ClientDto> findAllClients() {

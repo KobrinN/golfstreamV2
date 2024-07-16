@@ -1,7 +1,6 @@
 package ru.golfstream.project.service;
 
-import ru.golfstream.project.entity.Employee;
-import ru.golfstream.project.rest.dto.EmployeeDto;
+import ru.golfstream.project.rest.dto.response.EmployeeDto;
 import ru.golfstream.project.rest.dto.request.EmployeeRequest;
 
 import java.util.List;

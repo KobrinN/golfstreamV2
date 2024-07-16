@@ -9,7 +9,7 @@ import ru.golfstream.project.exception.exceptions.common.TimeMismatchException;
 import ru.golfstream.project.repos.EmployeeRepo;
 import ru.golfstream.project.repos.RouteRepo;
 import ru.golfstream.project.rest.dto.request.RouteRequest;
-import ru.golfstream.project.rest.dto.RouteDto;
+import ru.golfstream.project.rest.dto.response.RouteDto;
 import ru.golfstream.project.service.RouteService;
 
 import java.util.List;
