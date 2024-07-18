@@ -31,13 +31,13 @@ public class ClientController {
 
     @GetMapping("/all")
     public ResponseEntity<List<UserResponse>> getAll() {
-        return ResponseEntity.ok(clientService.getAllUsers());
+        return ResponseEntity.ok(clientService.getAll());
     }
 
     @GetMapping("/{id}/vouchers")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<VoucherResponse>> getClientAndHisVouchers(@PathVariable Long id){
-        return ResponseEntity.ok(voucherService.findVouchersOfClient(id));
+        return ResponseEntity.ok(voucherService.findVouchersByUserId(id));
     }
 
     @PostMapping("/{idClient}/purchase/{idVoucher}")
