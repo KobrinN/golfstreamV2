@@ -6,8 +6,8 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-@Builder
-public class RouteDto {
+public class RouteResponse {
+    private Long id;
     private String fromWhere;
     private String toWhere;
     private String transportation;

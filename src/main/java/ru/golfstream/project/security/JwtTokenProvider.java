@@ -29,11 +29,12 @@ import java.util.Set;
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
     private final UserRepo userRepo;
+    private final JwtProperties properties;
     private SecretKey key;
 
     @PostConstruct
     public void init() {
-        this.key = Keys.hmacShaKeyFor(JwtProperties.secret.getBytes());
+        this.key = Keys.hmacShaKeyFor(properties.getSecret().getBytes());
     }
 
     public String createAccessToken(User user) {
@@ -43,7 +44,7 @@ public class JwtTokenProvider {
                 .add("roles", (resolveRoles(user.getRoles())))
                 .build();
         Instant validity = Instant.now()
-                .plus(JwtProperties.access, ChronoUnit.HOURS);
+                .plus(properties.getAccess(), ChronoUnit.HOURS);
         return Jwts.builder()
                 .claims(claims)
                 .expiration(Date.from(validity))
@@ -63,7 +64,7 @@ public class JwtTokenProvider {
                 .add("id", user.getId())
                 .build();
         Instant validity = Instant.now()
-                .plus(JwtProperties.refresh, ChronoUnit.DAYS);
+                .plus(properties.getRefresh(), ChronoUnit.DAYS);
         return Jwts.builder()
                 .claims(claims)
                 .expiration(Date.from(validity))

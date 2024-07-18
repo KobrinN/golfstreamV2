@@ -6,9 +6,9 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-@Builder
-public class PurchaseDto {
+public class PurchaseResponse {
+    private Long id;
     private Long idVoucher;
-    private Long idClient;
+    private Long idUser;
     private LocalDate dateOfPurchase;
 }

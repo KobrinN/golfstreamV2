@@ -4,8 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class TypeEmployeeDto {
+public class TypeEmployeeResponse {
+    private Long id;
     private Double rate;
     private String type;
 }

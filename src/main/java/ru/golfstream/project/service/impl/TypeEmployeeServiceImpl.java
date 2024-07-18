@@ -1,13 +1,16 @@
 package ru.golfstream.project.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.support.CustomSQLExceptionTranslatorRegistrar;
 import org.springframework.stereotype.Service;
 import ru.golfstream.project.entity.TypeEmployee;
+import ru.golfstream.project.entity.User;
 import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.TypeEmployeeRepo;
-import ru.golfstream.project.rest.dto.request.TypeRequest;
-import ru.golfstream.project.rest.dto.response.TypeEmployeeDto;
+import ru.golfstream.project.rest.dto.mapper.TypeEmployeeMapper;
+import ru.golfstream.project.rest.dto.request.TypeEmployeeRequest;
+import ru.golfstream.project.rest.dto.response.TypeEmployeeResponse;
 import ru.golfstream.project.service.TypeEmployeeService;
 
 import java.util.List;
@@ -18,57 +21,48 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TypeEmployeeServiceImpl implements TypeEmployeeService {
     private final TypeEmployeeRepo typeEmployeeRepo;
+    private final TypeEmployeeMapper typeMapper;
 
     @Override
-    public List<TypeEmployeeDto> findAll() {
-        List<TypeEmployee> typeEmployee = typeEmployeeRepo.findAll();
-        return typeEmployee.stream()
-                .map(this::buildTypeEmployeeDto)
-                .collect(Collectors.toList());
+    public TypeEmployeeResponse getById(Long id) {
+        TypeEmployee typeEmployee = checkExistTypeAndGet(id);
+        return typeMapper.toResponse(typeEmployee);
     }
 
     @Override
-    public Long add(TypeRequest request) {
-        if(request.getRate() <= 0){
-            throw new InvlaidFieldException("Ставка не может быть <= 0!");
-        }
-        TypeEmployee typeEmployee = new TypeEmployee();
-        typeEmployee.setType(request.getType());
-        typeEmployee.setRate(request.getRate());
+    public List<TypeEmployeeResponse> getAll() {
+        List<TypeEmployee> typeEmployee = typeEmployeeRepo.findAll();
+        return typeEmployee.stream()
+                .map(typeMapper::toResponse)
+                .toList();
+    }
 
+    @Override
+    public Long post(TypeEmployeeRequest request) {
+        TypeEmployee typeEmployee = typeMapper.toModel(request);
         typeEmployeeRepo.saveAndFlush(typeEmployee);
         return typeEmployee.getId();
     }
 
     @Override
-    public TypeEmployeeDto delete(Long id) {
-        TypeEmployee typeEmployee = proofTypeExist(id);
-        typeEmployeeRepo.delete(typeEmployee);
-        return buildTypeEmployeeDto(typeEmployee);
+    public void delete(Long id) {
+        Optional<TypeEmployee> type = typeEmployeeRepo.findById(id);
+        type.ifPresent(typeEmployeeRepo::delete);
     }
 
     @Override
-    public TypeEmployeeDto update(Long id, TypeRequest request) {
-        TypeEmployee typeEmployee = proofTypeExist(id);
-
-        typeEmployee.setType(request.getType());
-        typeEmployee.setRate(request.getRate());
-
-        return buildTypeEmployeeDto(typeEmployee);
+    public TypeEmployeeResponse edit(Long id, TypeEmployeeRequest request) {
+        TypeEmployee typeEmployee = checkExistTypeAndGet(id);
+        typeEmployee = typeMapper.toModel(request);
+        typeEmployeeRepo.save(typeEmployee);
+        return typeMapper.toResponse(typeEmployee);
     }
 
-    protected TypeEmployee proofTypeExist(Long id){
-        Optional<TypeEmployee> typeEmployeeFromBd = typeEmployeeRepo.findById(id);
-        if(typeEmployeeFromBd.isEmpty()){
-            throw new NotFoundException("Нет типа работника с ID = " + id + "!");
+    private TypeEmployee checkExistTypeAndGet(Long id) throws NotFoundException{
+        Optional<TypeEmployee> type = typeEmployeeRepo.findById(id);
+        if (type.isEmpty()) {
+            throw new NotFoundException("Not found TYPE_OF_EMPLOYEE with id: " + id + "!");
         }
-        return typeEmployeeFromBd.get();
-    }
-
-    protected TypeEmployeeDto buildTypeEmployeeDto(TypeEmployee typeEmployee){
-        return TypeEmployeeDto.builder()
-                .rate(typeEmployee.getRate())
-                .type(typeEmployee.getType())
-                .build();
+        return type.get();
     }
 }

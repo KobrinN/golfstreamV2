@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.golfstream.project.rest.dto.response.PurchaseDto;
-import ru.golfstream.project.rest.dto.response.VoucherDto;
+import ru.golfstream.project.rest.dto.response.PurchaseResponse;
+import ru.golfstream.project.rest.dto.response.VoucherResponse;
 import ru.golfstream.project.rest.dto.request.VoucherRequest;
 import ru.golfstream.project.service.PurchaseService;
 import ru.golfstream.project.service.VoucherService;
@@ -20,31 +20,31 @@ public class VoucherController {
     private final PurchaseService purchaseService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<VoucherDto>> getAll(){
-        return ResponseEntity.ok(voucherService.findAll());
+    public ResponseEntity<List<VoucherResponse>> getAll(){
+        return ResponseEntity.ok(voucherService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VoucherDto> getById(@PathVariable Long id){
-        return ResponseEntity.ok(voucherService.findById(id));
+    public ResponseEntity<VoucherResponse> getById(@PathVariable Long id){
+        return ResponseEntity.ok(voucherService.getById(id));
     }
     @GetMapping("/{id}/purchase")
-    public ResponseEntity<List<PurchaseDto>> getPurchaseOfVoucher(@PathVariable Long id){
-        return ResponseEntity.ok(purchaseService.findPurchaseOfVoucher(id));
+    public ResponseEntity<List<PurchaseResponse>> getPurchaseOfVoucher(@PathVariable Long id){
+        return ResponseEntity.ok(purchaseService.getPurchaseOfVoucher(id));
     }
     @PostMapping
     public ResponseEntity<Long> add(@RequestBody VoucherRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(voucherService.add(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(voucherService.post(request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<VoucherDto> delete(@PathVariable Long id){
-        voucherService.deleteById(id);
+    public ResponseEntity<VoucherResponse> delete(@PathVariable Long id){
+        voucherService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<VoucherDto> update(@PathVariable Long id, VoucherRequest request){
+    public ResponseEntity<VoucherResponse> update(@PathVariable Long id, VoucherRequest request){
         return ResponseEntity.ok(voucherService.update(id, request));
     }
 

@@ -2,12 +2,9 @@ package ru.golfstream.project.rest.dto.response;
 
 import lombok.*;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
-@AllArgsConstructor
-@Builder
-public class VoucherOfClientDto{
+@Data
+public class VoucherOfUserResponse {
+    private Long id;
     private String name;
     private Double price;
 }

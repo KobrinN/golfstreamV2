@@ -1,13 +1,13 @@
 package ru.golfstream.project.service;
 
-import ru.golfstream.project.rest.dto.response.PurchaseDto;
+import ru.golfstream.project.rest.dto.response.PurchaseResponse;
 
 import java.util.List;
 
 public interface PurchaseService {
-    List<PurchaseDto> findPurchaseOfVoucher(Long id);
+    List<PurchaseResponse> getPurchaseOfVoucher(Long id);
 
-    PurchaseDto buy(Long idClient, Long idVoucher);
+    PurchaseResponse buy(Long idClient, Long idVoucher);
 
     void delete(Long id);
 }

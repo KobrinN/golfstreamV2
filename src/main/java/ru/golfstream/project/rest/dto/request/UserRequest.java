@@ -4,8 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class TypeRequest {
-    private Double rate;
-    private String type;
+public class UserRequest {
+    String username;
+    String password;
+    String mail;
 }
