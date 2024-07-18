@@ -45,7 +45,7 @@ public class VoucherController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<VoucherResponse> update(@PathVariable Long id, VoucherRequest request){
-        return ResponseEntity.ok(voucherService.update(id, request));
+        return ResponseEntity.ok(voucherService.edit(id, request));
     }
 
 }
