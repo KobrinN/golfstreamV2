@@ -1,19 +1,20 @@
 package ru.golfstream.project.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
-import ru.golfstream.project.entity.User;
 import ru.golfstream.project.entity.Route;
+import ru.golfstream.project.entity.User;
 import ru.golfstream.project.entity.Voucher;
 import ru.golfstream.project.exception.exceptions.client.NotFoundVoucherOfThisClient;
-import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
-import ru.golfstream.project.repos.UserRepo;
 import ru.golfstream.project.repos.PurchaseRepo;
 import ru.golfstream.project.repos.RouteRepo;
+import ru.golfstream.project.repos.UserRepo;
 import ru.golfstream.project.repos.VoucherRepo;
+import ru.golfstream.project.rest.dto.mapper.VoucherMapper;
 import ru.golfstream.project.rest.dto.request.VoucherRequest;
-import ru.golfstream.project.rest.dto.response.VoucherDto;
+import ru.golfstream.project.rest.dto.response.VoucherResponse;
 import ru.golfstream.project.service.VoucherService;
 
 import java.util.List;
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class VoucherServiceImpl implements VoucherService {
-    private final UserRepo clientRepo;
+    private final UserRepo userRepo;
     private final VoucherRepo voucherRepo;
-    private final PurchaseRepo purchaseRepo;
     private final RouteRepo routeRepo;
+    private final VoucherMapper voucherMapper;
 
     @Override
     public List<Voucher> getByRouteId(Long id) {
@@ -34,125 +35,83 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public List<VoucherDto> findAll() {
+    public List<VoucherResponse> getAll() {
         List<Voucher> vouchers = voucherRepo.findAll();
         return vouchers.stream()
-                .map(VoucherServiceImpl::buildVoucherDto)
-                .collect(Collectors.toList());
+                .map(voucherMapper::toResponse)
+                .toList();
     }
 
     @Override
-    public List<VoucherDto> getVouchersByRouteId(Long id) {
-        Optional<Route> routeFromDb = routeRepo.findById(id);
-
-        if(routeFromDb.isEmpty()){
-            throw new NotFoundException("Нет маршрута с id = " + id + "!");
-        }
-
-        List<Voucher> voucherFromDb = voucherRepo.findByRoute(routeFromDb.get());
-        return voucherFromDb.stream()
-                .map(VoucherServiceImpl::buildVoucherDto)
-                .collect(Collectors.toList());
+    public List<VoucherResponse> getVouchersByRouteId(Long id) {
+        Route route = checkExistAndGetRouteById(id);
+        List<Voucher> vouchers = voucherRepo.findByRoute(route);
+        return vouchers.stream()
+                .map(voucherMapper::toResponse)
+                .toList();
     }
 
     @Override
-    public VoucherDto findById(Long id) {
-        Optional<Voucher> voucherFromDb = voucherRepo.findById(id);
-        if (voucherFromDb.isEmpty()) {
-            throw new NotFoundException("нет такого тарифа!");
-        }
-
-        return buildVoucherDto(voucherFromDb.get());
+    public VoucherResponse getById(Long id) {
+        Voucher voucher = checkExistVoucherAndGet(id);
+        return voucherMapper.toResponse(voucher);
     }
 
     @Override
-    public Long add(VoucherRequest request) {
-        proofVoucherRequest(request);
-        Optional<Route> routeFromDb = routeRepo.findById(request.getIdRoute());
-        if(routeFromDb.isEmpty()){
-            throw new NotFoundException("Нет маршрута с ID = " + request.getIdRoute() + "!");
-        }
-        Voucher voucher = new Voucher();
-
-        voucher.setName(request.getName());
-        voucher.setPrice(request.getPrice());
-        voucher.setQuantity(request.getQuantity());
-        voucher.setReservation(request.getReservation());
-        voucher.setRoute(routeFromDb.get());
-
+    public Long post(VoucherRequest request) {
+        Voucher voucher = voucherMapper.toModel(request);
         voucherRepo.saveAndFlush(voucher);
         return voucher.getId();
     }
 
     @Override
-    public void deleteById(Long id) {
-        Optional<Voucher> voucherFromDb = voucherRepo.findById(id);
-        if(voucherFromDb.isEmpty()){
-            throw new NotFoundException("Нет путёвки с ID = " + id + "!");
-        }
-
-        voucherRepo.deleteById(id);
+    public VoucherResponse edit(Long id, VoucherRequest request) {
+        Voucher voucher = checkExistVoucherAndGet(id);
+        voucher = voucherMapper.toModel(request);
+        voucherRepo.save(voucher);
+        return voucherMapper.toResponse(voucher);
     }
 
     @Override
-    public VoucherDto update(Long id, VoucherRequest request) {
-        proofVoucherRequest(request);
-        Optional<Voucher> voucherFromDb = voucherRepo.findById(id);
-        Optional<Route> routeFromDb = routeRepo.findById((request.getIdRoute()));
-        if(voucherFromDb.isEmpty()){
-            throw new NotFoundException("Нет путёвки с ID = " + id + "!");
-        }
-        if(routeFromDb.isEmpty()){
-            throw new NotFoundException("Нет маршрута с ID = " + request.getIdRoute() + "!");
-        }
-        Voucher voucher = new Voucher();
-        voucher.setName(request.getName());
-        voucher.setPrice(request.getPrice());
-        voucher.setQuantity(request.getQuantity());
-        voucher.setReservation(request.getReservation());
-        voucher.setRoute(routeFromDb.get());
-
-
-
-        return buildVoucherDto(voucher);
+    public void delete(Long id) {
+        Optional<Voucher> voucher = voucherRepo.findById(id);
+        voucher.ifPresent(voucherRepo::delete);
     }
 
     @Override
-    public List<VoucherDto> findVouchersOfClient(Long id) {
-        Optional<User> clientFromBd = clientRepo.findById(id);
-        if(clientFromBd.isEmpty()){
-            throw new NotFoundException("Нет пользователя с ID = "+ id + "!");
-        }
-        List<Voucher> clientAndVoucherDtoList = clientRepo.getVoucherOfClientDto(id);
+    public List<VoucherResponse> findVouchersByUserId(Long id) {
+        User user = checkExistUserAndGet(id);
+        List<Voucher> clientAndVoucherDtoList = userRepo.getVoucherOfClientDto(id);
 
         if (clientAndVoucherDtoList.isEmpty()) {
             throw new NotFoundVoucherOfThisClient("Не найдены путёвки этого пользователя!");
         }
 
         return clientAndVoucherDtoList.stream()
-                .map(VoucherServiceImpl::buildVoucherDto)
-                .collect(Collectors.toList());
+                .map(voucherMapper::toResponse)
+                .toList();
     }
 
-    protected static VoucherDto buildVoucherDto(Voucher voucher) {
-        return VoucherDto.builder()
-                .name(voucher.getName())
-                .reservation(voucher.getReservation())
-                .price(voucher.getPrice())
-                .quantity(voucher.getQuantity())
-                .build();
-    }
-
-    protected void proofVoucherRequest(VoucherRequest request){
-        if ((request.getReservation() <= 0) ||
-                (request.getQuantity() <= 0) ||
-                (request.getPrice() <= 0)) {
-            throw new InvlaidFieldException("Некорректные значения путёвки!");
+    private Voucher checkExistVoucherAndGet(Long id) throws NotFoundException {
+        Optional<Voucher> voucher = voucherRepo.findById(id);
+        if (voucher.isEmpty()) {
+            throw new NotFoundException("Not found VOUCHER with id: " + id + "!");
         }
-        Optional<Route> routeFromDb = routeRepo.findById((request.getIdRoute()));
-        if(routeFromDb.isEmpty()){
-            throw new NotFoundException("Нет такого маршрута!");
-        }
+        return voucher.get();
     }
 
+    private Route checkExistAndGetRouteById(Long id){
+        Optional<Route> route = routeRepo.findById(id);
+        if(route.isEmpty()) throw new NotFoundException("Not found ROUTE with id: " + id + "!");
+
+        return route.get();
+    }
+
+    private User checkExistUserAndGet(Long id) throws NotFoundException{
+        Optional<User> user = userRepo.findById(id);
+        if (user.isEmpty()) {
+            throw new NotFoundException("Not found USER with id: " + id + "!");
+        }
+        return user.get();
+    }
 }

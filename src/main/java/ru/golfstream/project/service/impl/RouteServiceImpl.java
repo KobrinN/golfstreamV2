@@ -8,115 +8,86 @@ import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.exception.exceptions.common.TimeMismatchException;
 import ru.golfstream.project.repos.EmployeeRepo;
 import ru.golfstream.project.repos.RouteRepo;
+import ru.golfstream.project.rest.dto.mapper.EmployeeMapper;
+import ru.golfstream.project.rest.dto.mapper.RouteMapper;
 import ru.golfstream.project.rest.dto.request.RouteRequest;
-import ru.golfstream.project.rest.dto.response.RouteDto;
+import ru.golfstream.project.rest.dto.response.RouteResponse;
 import ru.golfstream.project.service.RouteService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
     private final RouteRepo routeRepo;
     private final EmployeeRepo employeeRepo;
+    private final RouteMapper routeMapper;
+    private final EmployeeMapper employeeMapper;
+
     @Override
-    public List<RouteDto> getAll() {
+    public List<RouteResponse> getAll() {
         List<Route> all = routeRepo.findAll();
         return all.stream()
-                .map(route -> RouteDto.builder()
-                        .arrival(route.getArrival())
-                        .departure(route.getDeparture())
-                        .fromWhere(route.getFromWhere())
-                        .toWhere(route.getToWhere())
-                        .transportation(route.getTransportation())
-                        .build())
+                .map(routeMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public RouteDto getById(Long id) {
-        Optional<Route> routeFromDb = routeRepo.findById(id);
-
-        if(routeFromDb.isEmpty()){
-            throw new NotFoundException("Нет маршрута с id = " + id + "!");
-        }
-
-        Route route = routeFromDb.get();
-        return buildRouteDto(route);
+    public RouteResponse getById(Long id) {
+        Route route = checkExistAndGetRouteById(id);
+        return routeMapper.toResponse(route);
     }
 
     @Override
-    public List<RouteDto> findRouteOfEmployee(Long id) {
-        Optional<Employee> employeeFromDb = employeeRepo.findById(id);
-        if(employeeFromDb.isEmpty()){
-            throw new NotFoundException("Нет работника с ID = " + id + "!");
-        }
-        Employee employee = employeeFromDb.get();
+    public List<RouteResponse> getRouteOfEmployee(Long id) {
+        Employee employee = checkExistAndGetEmployeeById(id);
         return employee.getRoutes().stream()
-                .map(this::buildRouteDto)
-                .collect(Collectors.toList());
+                .map(routeMapper::toResponse)
+                .toList();
     }
 
     @Override
-    public Long add(RouteRequest request) {
-        Optional<Employee> employeeFromDb = employeeRepo.findById(request.getIdInstructor());
-        if(employeeFromDb.isEmpty()){
-            throw new NotFoundException("Нет работника с ID = " + request.getIdInstructor() + "!");
-        }
+    public Long post(RouteRequest request) {
+        checkExistEmployee(request.getIdInstructor());
         if(request.getArrival().isAfter(request.getDeparture())){
-            throw new TimeMismatchException("Время отправление позже времени прибытия!");
+            throw new TimeMismatchException("ARRIVAL is after DEPARTURE!");
         }
-        Route route = buildRoute(employeeFromDb.get(), request);
+        Route route = routeMapper.toModel(request);
         routeRepo.saveAndFlush(route);
         return route.getId();
     }
 
     @Override
-    public RouteDto updateById(Long id, RouteRequest request) {
-        Optional<Route> route = routeRepo.findById(id);
-        Optional<Employee> employeeFromDb = employeeRepo.findById(request.getIdInstructor());
-        if(employeeFromDb.isEmpty()){
-            throw new NotFoundException("Нет работника с ID = " + 1 + "!");
-        }
-
-        Route routeFromDb = route.get();
-        routeFromDb = buildRoute(employeeFromDb.get(), request);
-        routeRepo.saveAndFlush(routeFromDb);
-
-        return buildRouteDto(routeFromDb);
+    public RouteResponse edit(Long id, RouteRequest request) {
+        checkExistEmployee(request.getIdInstructor());
+        Route route = checkExistAndGetRouteById(id);
+        routeRepo.saveAndFlush(route);
+        return routeMapper.toResponse(route);
     }
 
     @Override
-    public void deleteById(Long id) {
-        Optional<Route> routeFromDb = routeRepo.findById(id);
-        if(routeFromDb.isEmpty()){
-            throw new NotFoundException("Нет такого маршрута!");
+    public void delete(Long id) {
+        Optional<Route> route = routeRepo.findById(id);
+        route.ifPresent(routeRepo::delete);
+    }
+
+    private Route checkExistAndGetRouteById(Long id){
+        Optional<Route> route = routeRepo.findById(id);
+        if(route.isEmpty()) throw new NotFoundException("Not found ROUTE with id: " + id + "!");
+
+        return route.get();
+    }
+
+    private void checkExistEmployee(Long id){
+        if (!employeeRepo.existsById(id)) {
+            throw new NotFoundException("Not found EMPLOYEE with id: " + id + "!");
         }
-
-        routeRepo.deleteById(id);
     }
 
-    protected RouteDto buildRouteDto(Route route){
-        return RouteDto.builder()
-                .arrival(route.getArrival())
-                .departure(route.getDeparture())
-                .fromWhere(route.getFromWhere())
-                .toWhere(route.getToWhere())
-                .transportation(route.getTransportation())
-                .build();
-    }
-
-    private static Route buildRoute(Employee employee, RouteRequest request){
-        Route route = new Route();
-        route.setArrival(request.getArrival());
-        route.setDeparture(request.getDeparture());
-        route.setFromWhere(request.getFromWhere());
-        route.setToWhere(request.getToWhere());
-        route.setTransportation(request.getTransportation());
-        route.setInstructor(employee);
-
-        return route;
+    protected Employee checkExistAndGetEmployeeById(Long id){
+        Optional<Employee> employee = employeeRepo.findByIdWithRoute(id);
+        if(employee.isEmpty()) throw new NotFoundException("Not found EMPLOYEE with id: " + id + "!");
+        return employee.get();
     }
 }

@@ -1,9 +1,6 @@
 package ru.golfstream.project.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.golfstream.project.entity.Role;
@@ -11,8 +8,9 @@ import ru.golfstream.project.entity.Role;
 import java.util.Collection;
 import java.util.List;
 
-@Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class UserDetailsImpl implements UserDetails {
     private Long id;

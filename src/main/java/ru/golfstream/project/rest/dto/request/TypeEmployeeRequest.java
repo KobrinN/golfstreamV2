@@ -4,9 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class ClientRequest {
-    String username;
-    String mail;
-    String password;
+public class TypeEmployeeRequest {
+    private Double rate;
+    private String type;
 }

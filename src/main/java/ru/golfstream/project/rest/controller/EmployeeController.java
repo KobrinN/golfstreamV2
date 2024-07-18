@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.golfstream.project.rest.dto.response.EmployeeDto;
-import ru.golfstream.project.rest.dto.response.RouteDto;
-import ru.golfstream.project.rest.dto.response.TypeEmployeeDto;
+import ru.golfstream.project.rest.dto.response.EmployeeResponse;
+import ru.golfstream.project.rest.dto.response.RouteResponse;
+import ru.golfstream.project.rest.dto.response.TypeEmployeeResponse;
 import ru.golfstream.project.rest.dto.request.EmployeeRequest;
-import ru.golfstream.project.rest.dto.request.TypeRequest;
+import ru.golfstream.project.rest.dto.request.TypeEmployeeRequest;
 import ru.golfstream.project.service.EmployeeService;
 import ru.golfstream.project.service.RouteService;
 import ru.golfstream.project.service.TypeEmployeeService;
@@ -24,23 +24,23 @@ public class EmployeeController {
     private final TypeEmployeeService typeEmployeeService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<EmployeeDto>> getAll() {
-        return ResponseEntity.ok(employeeService.findAll());
+    public ResponseEntity<List<EmployeeResponse>> getAll() {
+        return ResponseEntity.ok(employeeService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(employeeService.findById(id));
+    public ResponseEntity<EmployeeResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(employeeService.getById(id));
     }
 
     @GetMapping("/rate")
-    public ResponseEntity<List<TypeEmployeeDto>> getAllType() {
-        return ResponseEntity.ok(typeEmployeeService.findAll());
+    public ResponseEntity<List<TypeEmployeeResponse>> getAllType() {
+        return ResponseEntity.ok(typeEmployeeService.getAll());
     }
 
     @GetMapping("/{id}/route")
-    public ResponseEntity<List<RouteDto>> getTypeEmployeeById(@PathVariable Long id) {
-        return ResponseEntity.ok(routeService.findRouteOfEmployee(id));
+    public ResponseEntity<List<RouteResponse>> getTypeEmployeeById(@PathVariable Long id) {
+        return ResponseEntity.ok(routeService.getRouteOfEmployee(id));
     }
 
     @GetMapping("/{id}/salary")
@@ -50,12 +50,12 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<Long> add(@RequestBody EmployeeRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.add(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.post(request));
     }
 
     @PostMapping("/rate")
-    public ResponseEntity<Long> addRate(@RequestBody TypeRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(typeEmployeeService.add(request));
+    public ResponseEntity<Long> addRate(@RequestBody TypeEmployeeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(typeEmployeeService.post(request));
     }
 
     @DeleteMapping("/{id}")
@@ -71,12 +71,12 @@ public class EmployeeController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<EmployeeDto> update(@PathVariable Long id, @RequestBody EmployeeRequest request) {
-        return ResponseEntity.ok(employeeService.update(id, request));
+    public ResponseEntity<EmployeeResponse> update(@PathVariable Long id, @RequestBody EmployeeRequest request) {
+        return ResponseEntity.ok(employeeService.edit(id, request));
     }
 
     @PatchMapping("/rate/{id}")
-    public ResponseEntity<TypeEmployeeDto> updateType(@PathVariable Long id, @RequestBody TypeRequest request) {
-        return ResponseEntity.ok(typeEmployeeService.update(id, request));
+    public ResponseEntity<TypeEmployeeResponse> updateType(@PathVariable Long id, @RequestBody TypeEmployeeRequest request) {
+        return ResponseEntity.ok(typeEmployeeService.edit(id, request));
     }
 }

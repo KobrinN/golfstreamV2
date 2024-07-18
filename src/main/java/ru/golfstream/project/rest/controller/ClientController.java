@@ -5,11 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.golfstream.project.rest.dto.response.ClientDto;
-import ru.golfstream.project.rest.dto.response.PurchaseDto;
-import ru.golfstream.project.rest.dto.response.VoucherDto;
-import ru.golfstream.project.rest.dto.request.ClientRequest;
-import ru.golfstream.project.service.ClientService;
+import ru.golfstream.project.rest.dto.response.UserResponse;
+import ru.golfstream.project.rest.dto.response.PurchaseResponse;
+import ru.golfstream.project.rest.dto.response.VoucherResponse;
+import ru.golfstream.project.rest.dto.request.UserRequest;
+import ru.golfstream.project.service.UserService;
 import ru.golfstream.project.service.PurchaseService;
 import ru.golfstream.project.service.VoucherService;
 
@@ -20,40 +20,40 @@ import java.util.List;
 @RequestMapping("/api/v1/client")
 @RequiredArgsConstructor
 public class ClientController {
-    private final ClientService clientService;
+    private final UserService clientService;
     private final VoucherService voucherService;
     private final PurchaseService purchaseService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDto> getById(@PathVariable Long id){
-        return ResponseEntity.ok(clientService.findById(id));
+    public ResponseEntity<UserResponse> getById(@PathVariable Long id){
+        return ResponseEntity.ok(clientService.getById(id));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ClientDto>> getAll() {
-        return ResponseEntity.ok(clientService.findAllClients());
+    public ResponseEntity<List<UserResponse>> getAll() {
+        return ResponseEntity.ok(clientService.getAllUsers());
     }
 
     @GetMapping("/{id}/vouchers")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<VoucherDto>> getClientAndHisVouchers(@PathVariable Long id){
+    public ResponseEntity<List<VoucherResponse>> getClientAndHisVouchers(@PathVariable Long id){
         return ResponseEntity.ok(voucherService.findVouchersOfClient(id));
     }
 
     @PostMapping("/{idClient}/purchase/{idVoucher}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<PurchaseDto> buyVoucher(@PathVariable Long idClient, @PathVariable Long idVoucher){
+    public ResponseEntity<PurchaseResponse> buyVoucher(@PathVariable Long idClient, @PathVariable Long idVoucher){
         return ResponseEntity.status(HttpStatus.CREATED).body(purchaseService.buy(idClient, idVoucher));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Long> add(@RequestBody ClientRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.addNewClient(request));
+    public ResponseEntity<Long> add(@RequestBody UserRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.post(request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id){
-        clientService.deleteById(id);
+        clientService.delete(id);
        return ResponseEntity.ok().build();
     }
 
@@ -65,8 +65,8 @@ public class ClientController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ClientDto> edit(@PathVariable Long id, @RequestBody ClientDto clientDto){
-        return ResponseEntity.ok(clientService.edit(id, clientDto));
+    public ResponseEntity<UserResponse> edit(@PathVariable Long id, @RequestBody UserRequest request){
+        return ResponseEntity.ok(clientService.edit(id, request));
     }
 }
 
