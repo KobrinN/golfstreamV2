@@ -3,6 +3,7 @@ package ru.golfstream.project.rest.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.golfstream.project.rest.dto.response.EmployeeResponse;
 import ru.golfstream.project.rest.dto.response.RouteResponse;
@@ -49,12 +50,12 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> add(@RequestBody EmployeeRequest request) {
+    public ResponseEntity<Long> add(@Validated @RequestBody EmployeeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.post(request));
     }
 
     @PostMapping("/rate")
-    public ResponseEntity<Long> addRate(@RequestBody TypeEmployeeRequest request) {
+    public ResponseEntity<Long> addRate(@Validated @RequestBody TypeEmployeeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(typeEmployeeService.post(request));
     }
 
@@ -71,12 +72,12 @@ public class EmployeeController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<EmployeeResponse> update(@PathVariable Long id, @RequestBody EmployeeRequest request) {
+    public ResponseEntity<EmployeeResponse> update(@PathVariable Long id, @Validated @RequestBody EmployeeRequest request) {
         return ResponseEntity.ok(employeeService.edit(id, request));
     }
 
     @PatchMapping("/rate/{id}")
-    public ResponseEntity<TypeEmployeeResponse> updateType(@PathVariable Long id, @RequestBody TypeEmployeeRequest request) {
+    public ResponseEntity<TypeEmployeeResponse> updateType(@PathVariable Long id, @Validated @RequestBody TypeEmployeeRequest request) {
         return ResponseEntity.ok(typeEmployeeService.edit(id, request));
     }
 }
