@@ -3,6 +3,7 @@ package ru.golfstream.project.rest.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.golfstream.project.rest.dto.response.PurchaseResponse;
 import ru.golfstream.project.rest.dto.response.VoucherResponse;
@@ -33,7 +34,7 @@ public class VoucherController {
         return ResponseEntity.ok(purchaseService.getPurchaseOfVoucher(id));
     }
     @PostMapping
-    public ResponseEntity<Long> add(@RequestBody VoucherRequest request){
+    public ResponseEntity<Long> add(@Validated @RequestBody VoucherRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(voucherService.post(request));
     }
 
@@ -44,7 +45,7 @@ public class VoucherController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<VoucherResponse> update(@PathVariable Long id, VoucherRequest request){
+    public ResponseEntity<VoucherResponse> update(@PathVariable Long id, @Validated @RequestBody VoucherRequest request){
         return ResponseEntity.ok(voucherService.edit(id, request));
     }
 

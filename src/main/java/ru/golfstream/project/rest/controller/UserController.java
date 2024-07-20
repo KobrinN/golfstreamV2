@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.golfstream.project.rest.dto.response.UserResponse;
 import ru.golfstream.project.rest.dto.response.PurchaseResponse;
@@ -17,21 +18,21 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/client")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
-public class ClientController {
-    private final UserService clientService;
+public class UserController {
+    private final UserService userService;
     private final VoucherService voucherService;
     private final PurchaseService purchaseService;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getById(@PathVariable Long id){
-        return ResponseEntity.ok(clientService.getById(id));
+        return ResponseEntity.ok(userService.getById(id));
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<UserResponse>> getAll() {
-        return ResponseEntity.ok(clientService.getAll());
+        return ResponseEntity.ok(userService.getAll());
     }
 
     @GetMapping("/{id}/vouchers")
@@ -40,20 +41,20 @@ public class ClientController {
         return ResponseEntity.ok(voucherService.findVouchersByUserId(id));
     }
 
-    @PostMapping("/{idClient}/purchase/{idVoucher}")
+    @PostMapping("/{idUser}/purchase/{idVoucher}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<PurchaseResponse> buyVoucher(@PathVariable Long idClient, @PathVariable Long idVoucher){
-        return ResponseEntity.status(HttpStatus.CREATED).body(purchaseService.buy(idClient, idVoucher));
+    public ResponseEntity<PurchaseResponse> buyVoucher(@PathVariable Long idUser, @PathVariable Long idVoucher){
+        return ResponseEntity.status(HttpStatus.CREATED).body(purchaseService.buy(idUser, idVoucher));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Long> add(@RequestBody UserRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.post(request));
+    public ResponseEntity<Long> add(@Validated @RequestBody UserRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.post(request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id){
-        clientService.delete(id);
+        userService.delete(id);
        return ResponseEntity.ok().build();
     }
 
@@ -65,8 +66,8 @@ public class ClientController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse> edit(@PathVariable Long id, @RequestBody UserRequest request){
-        return ResponseEntity.ok(clientService.edit(id, request));
+    public ResponseEntity<UserResponse> edit(@PathVariable Long id, @Validated @RequestBody UserRequest request){
+        return ResponseEntity.ok(userService.edit(id, request));
     }
 }
 

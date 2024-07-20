@@ -3,6 +3,7 @@ package ru.golfstream.project.rest.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.golfstream.project.rest.dto.response.RouteResponse;
 import ru.golfstream.project.rest.dto.response.VoucherResponse;
@@ -20,7 +21,7 @@ public class RouteController {
     private final VoucherService voucherService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<RouteResponse>> getAllForClient(){
+    public ResponseEntity<List<RouteResponse>> getAll(){
         return ResponseEntity.ok(routeService.getAll());
     }
 
@@ -35,12 +36,12 @@ public class RouteController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> add(@RequestBody RouteRequest request){
+    public ResponseEntity<Long> add(@Validated @RequestBody RouteRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(routeService.post(request));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<RouteResponse> updateById(@PathVariable Long id, @RequestBody RouteRequest request){
+    public ResponseEntity<RouteResponse> updateById(@PathVariable Long id, @Validated @RequestBody RouteRequest request){
         return ResponseEntity.ok(routeService.edit(id, request));
     }
 
