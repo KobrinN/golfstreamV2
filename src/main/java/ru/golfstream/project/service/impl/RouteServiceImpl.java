@@ -8,7 +8,6 @@ import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.exception.exceptions.common.TimeMismatchException;
 import ru.golfstream.project.repos.EmployeeRepo;
 import ru.golfstream.project.repos.RouteRepo;
-import ru.golfstream.project.rest.dto.mapper.EmployeeMapper;
 import ru.golfstream.project.rest.dto.mapper.RouteMapper;
 import ru.golfstream.project.rest.dto.mapper.RouteMapperImpl;
 import ru.golfstream.project.rest.dto.request.RouteRequest;
@@ -50,7 +49,7 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public Long post(RouteRequest request) {
         checkExistEmployee(request.getIdInstructor());
-        if(request.getArrival().isAfter(request.getDeparture())){
+        if (request.getArrival().isAfter(request.getDeparture())) {
             throw new TimeMismatchException("ARRIVAL is after DEPARTURE!");
         }
         Route route = routeMapper.toModel(request);
@@ -60,8 +59,16 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public RouteResponse edit(Long id, RouteRequest request) {
-        checkExistEmployee(request.getIdInstructor());
+        Employee employee = checkExistAndGetEmployeeById(request.getIdInstructor());
         Route route = checkExistAndGetRouteById(id);
+
+        route.setArrival(request.getArrival());
+        route.setDeparture(request.getDeparture());
+        route.setInstructor(employee);
+        route.setFromWhere(request.getFromWhere());
+        route.setToWhere(request.getToWhere());
+        route.setTransportation(request.getTransportation());
+
         routeRepo.saveAndFlush(route);
         return routeMapper.toResponse(route);
     }
@@ -72,22 +79,22 @@ public class RouteServiceImpl implements RouteService {
         route.ifPresent(routeRepo::delete);
     }
 
-    private Route checkExistAndGetRouteById(Long id){
+    private Route checkExistAndGetRouteById(Long id) {
         Optional<Route> route = routeRepo.findById(id);
-        if(route.isEmpty()) throw new NotFoundException("Not found ROUTE with id: " + id + "!");
+        if (route.isEmpty()) throw new NotFoundException("Not found ROUTE with id: " + id + "!");
 
         return route.get();
     }
 
-    private void checkExistEmployee(Long id){
+    private void checkExistEmployee(Long id) {
         if (!employeeRepo.existsById(id)) {
             throw new NotFoundException("Not found EMPLOYEE with id: " + id + "!");
         }
     }
 
-    protected Employee checkExistAndGetEmployeeById(Long id){
+    protected Employee checkExistAndGetEmployeeById(Long id) {
         Optional<Employee> employee = employeeRepo.findByIdWithRoute(id);
-        if(employee.isEmpty()) throw new NotFoundException("Not found EMPLOYEE with id: " + id + "!");
+        if (employee.isEmpty()) throw new NotFoundException("Not found EMPLOYEE with id: " + id + "!");
         return employee.get();
     }
 }

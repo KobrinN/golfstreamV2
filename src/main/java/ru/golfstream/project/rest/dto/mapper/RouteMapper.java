@@ -11,5 +11,9 @@ import ru.golfstream.project.rest.dto.response.RouteResponse;
 public interface RouteMapper {
     @Mapping(target = "instructor.id", source = "request.idInstructor")
     Route toModel(RouteRequest request);
+    @Mapping(target = "idInstructor", source = "route.instructor.id")
+    RouteRequest toRequest(Route route);
     RouteResponse toResponse(Route route);
+    Route toModel(RouteResponse response);
+
 }

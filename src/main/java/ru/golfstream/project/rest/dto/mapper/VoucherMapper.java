@@ -11,5 +11,7 @@ import ru.golfstream.project.rest.dto.response.VoucherResponse;
 public interface VoucherMapper {
     @Mapping(target = "route.id", source = "request.idRoute")
     Voucher toModel(VoucherRequest request);
+    VoucherRequest toRequest(Voucher voucher);
     VoucherResponse toResponse(Voucher voucher);
+    Voucher toModel(VoucherResponse response);
 }
