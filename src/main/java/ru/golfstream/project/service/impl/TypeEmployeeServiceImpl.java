@@ -9,6 +9,7 @@ import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.TypeEmployeeRepo;
 import ru.golfstream.project.rest.dto.mapper.TypeEmployeeMapper;
+import ru.golfstream.project.rest.dto.mapper.TypeEmployeeMapperImpl;
 import ru.golfstream.project.rest.dto.request.TypeEmployeeRequest;
 import ru.golfstream.project.rest.dto.response.TypeEmployeeResponse;
 import ru.golfstream.project.service.TypeEmployeeService;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TypeEmployeeServiceImpl implements TypeEmployeeService {
     private final TypeEmployeeRepo typeEmployeeRepo;
-    private final TypeEmployeeMapper typeMapper;
+    private final TypeEmployeeMapper typeMapper = new TypeEmployeeMapperImpl();
 
     @Override
     public TypeEmployeeResponse getById(Long id) {

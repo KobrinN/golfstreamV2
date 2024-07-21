@@ -8,8 +8,9 @@ import ru.golfstream.project.rest.dto.request.UserRequest;
 import ru.golfstream.project.rest.dto.response.UserResponse;
 
 @Mapper
-@Component
 public interface UserMapper {
     User toModel(UserRequest request);
+    UserRequest toRequest(User user);
     UserResponse toResponse(User user);
+    User toModel(UserResponse response);
 }

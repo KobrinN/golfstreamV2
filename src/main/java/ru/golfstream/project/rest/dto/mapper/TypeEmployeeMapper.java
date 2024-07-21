@@ -1,6 +1,7 @@
 package ru.golfstream.project.rest.dto.mapper;
 
 import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 import ru.golfstream.project.entity.Route;
 import ru.golfstream.project.entity.TypeEmployee;
 import ru.golfstream.project.rest.dto.request.RouteRequest;

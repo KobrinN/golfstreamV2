@@ -10,6 +10,7 @@ import ru.golfstream.project.repos.EmployeeRepo;
 import ru.golfstream.project.repos.RouteRepo;
 import ru.golfstream.project.rest.dto.mapper.EmployeeMapper;
 import ru.golfstream.project.rest.dto.mapper.RouteMapper;
+import ru.golfstream.project.rest.dto.mapper.RouteMapperImpl;
 import ru.golfstream.project.rest.dto.request.RouteRequest;
 import ru.golfstream.project.rest.dto.response.RouteResponse;
 import ru.golfstream.project.service.RouteService;
@@ -22,8 +23,7 @@ import java.util.Optional;
 public class RouteServiceImpl implements RouteService {
     private final RouteRepo routeRepo;
     private final EmployeeRepo employeeRepo;
-    private final RouteMapper routeMapper;
-    private final EmployeeMapper employeeMapper;
+    private final RouteMapper routeMapper = new RouteMapperImpl();
 
     @Override
     public List<RouteResponse> getAll() {

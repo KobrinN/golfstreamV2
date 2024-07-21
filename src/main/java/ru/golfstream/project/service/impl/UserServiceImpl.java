@@ -8,6 +8,7 @@ import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.UserRepo;
 import ru.golfstream.project.rest.dto.mapper.UserMapper;
+import ru.golfstream.project.rest.dto.mapper.UserMapperImpl;
 import ru.golfstream.project.rest.dto.response.UserResponse;
 import ru.golfstream.project.rest.dto.request.UserRequest;
 import ru.golfstream.project.service.UserService;
@@ -20,9 +21,8 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepo userRepo;
-    private final UserMapper userMapper;
+    private final UserMapper userMapper = new UserMapperImpl();
 
 
     @Override
@@ -35,24 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long post(UserRequest request) {
-        Pattern pattern = Pattern.compile("^[A-Z0-9+_.-]+@[A-Z0-9.-]+$");
-        Matcher matcher = pattern.matcher(request.getMail());
-
-        if (!StringUtils.hasText(request.getUsername()) ||
-                StringUtils.hasText(request.getMail()) ||
-                StringUtils.hasText(request.getPassword()) ||
-                matcher.find()) {
-            throw new InvlaidFieldException("Поля некорректные!");
-        }
-
-        User client = new User();
-        client.setUsername(request.getUsername());
-        client.setMail(request.getMail());
-        client.setPassword(request.getPassword());
-
-        userRepo.saveAndFlush(client);
-
-        return client.getId();
+        User user = userMapper.toModel(request);
+        user = userRepo.saveAndFlush(user);
+        return user.getId();
     }
 
     @Override
@@ -70,8 +55,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse edit(Long id, UserRequest request) {
         User user = checkExistUserAndGet(id);
-        user = userMapper.toModel(request);
-        userRepo.save(user);
+
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+        user.setMail(request.getMail());
+
+        user = userRepo.saveAndFlush(user);
         return userMapper.toResponse(user);
     }
 

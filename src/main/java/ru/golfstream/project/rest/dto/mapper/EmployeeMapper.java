@@ -2,6 +2,7 @@ package ru.golfstream.project.rest.dto.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 import ru.golfstream.project.entity.Employee;
 import ru.golfstream.project.rest.dto.request.EmployeeRequest;
 import ru.golfstream.project.rest.dto.response.EmployeeResponse;

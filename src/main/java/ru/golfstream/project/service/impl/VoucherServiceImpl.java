@@ -13,6 +13,7 @@ import ru.golfstream.project.repos.RouteRepo;
 import ru.golfstream.project.repos.UserRepo;
 import ru.golfstream.project.repos.VoucherRepo;
 import ru.golfstream.project.rest.dto.mapper.VoucherMapper;
+import ru.golfstream.project.rest.dto.mapper.VoucherMapperImpl;
 import ru.golfstream.project.rest.dto.request.VoucherRequest;
 import ru.golfstream.project.rest.dto.response.VoucherResponse;
 import ru.golfstream.project.service.VoucherService;
@@ -27,7 +28,7 @@ public class VoucherServiceImpl implements VoucherService {
     private final UserRepo userRepo;
     private final VoucherRepo voucherRepo;
     private final RouteRepo routeRepo;
-    private final VoucherMapper voucherMapper;
+    private final VoucherMapper voucherMapper = new VoucherMapperImpl();
 
     @Override
     public List<Voucher> getByRouteId(Long id) {
