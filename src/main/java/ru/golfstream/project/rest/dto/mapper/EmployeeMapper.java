@@ -11,5 +11,8 @@ import ru.golfstream.project.rest.dto.response.EmployeeResponse;
 public interface EmployeeMapper {
     @Mapping(target = "type.id", source = "request.idType")
     Employee toModel(EmployeeRequest request);
+    @Mapping(target = "idType", source = "employee.type.id")
+    EmployeeRequest toRequest(Employee employee);
     EmployeeResponse toResponse(Employee employee);
+    Employee toModel(EmployeeResponse response);
 }
