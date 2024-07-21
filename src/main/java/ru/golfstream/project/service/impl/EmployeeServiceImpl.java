@@ -9,6 +9,7 @@ import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.EmployeeRepo;
 import ru.golfstream.project.repos.TypeEmployeeRepo;
 import ru.golfstream.project.rest.dto.mapper.EmployeeMapper;
+import ru.golfstream.project.rest.dto.mapper.EmployeeMapperImpl;
 import ru.golfstream.project.rest.dto.mapper.UserMapper;
 import ru.golfstream.project.rest.dto.response.EmployeeResponse;
 import ru.golfstream.project.rest.dto.request.EmployeeRequest;
@@ -22,8 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepo employeeRepo;
-    private final TypeEmployeeRepo typeEmployeeRepo;
-    private final EmployeeMapper employeeMapper;
+    private final EmployeeMapper employeeMapper = new EmployeeMapperImpl();
 
     @Override
     public EmployeeResponse getById(Long id) {
