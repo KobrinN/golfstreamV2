@@ -67,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private Employee checkExistAndGetEmployeeById(Long id){
-        Optional<Employee> employee = employeeRepo.findByIdWithRoute(id);
+        Optional<Employee> employee = employeeRepo.findById(id);
         if(employee.isEmpty()) throw new NotFoundException("Not found EMPLOYEE with id: " + id + "!");
         return employee.get();
     }

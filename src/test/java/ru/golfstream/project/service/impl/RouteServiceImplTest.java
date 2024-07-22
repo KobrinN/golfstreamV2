@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.golfstream.project.entity.Employee;
 import ru.golfstream.project.entity.Route;
+import ru.golfstream.project.exception.exceptions.common.NotFoundException;
 import ru.golfstream.project.repos.EmployeeRepo;
 import ru.golfstream.project.repos.RouteRepo;
 import ru.golfstream.project.rest.dto.mapper.RouteMapper;
@@ -37,10 +38,11 @@ class RouteServiceImplTest {
     private static List<RouteRequest> requests;
     private static List<RouteResponse> responses;
 
+    private static Employee employee;
     @BeforeAll
     static void init() {
         Route route = new Route();
-        Employee employee = new Employee();
+        employee = new Employee();
 
         route.setId(1L);
         employee.setId(1L);
@@ -53,6 +55,7 @@ class RouteServiceImplTest {
         route.setId(2L);
         routes.add(route);
 
+        employee.setRoutes(routes);
         responses = routes.stream().map(routeMapper::toResponse).toList();
         requests = routes.stream().map(routeMapper::toRequest).toList();
     }
@@ -78,18 +81,45 @@ class RouteServiceImplTest {
     }
 
     @Test
-    void getById() {
+    void getById_should_return_user() {
         when(routeRepo.findById(any(Long.class))).thenReturn(Optional.of(routes.get(0)));
 
+        RouteResponse response = routeService.getById(1L);
+
+        verify(routeRepo, times(1)).findById(any(Long.class));
+        assertEquals(responses.get(0), response);
 
     }
 
     @Test
-    void getRouteOfEmployee() {
+    void getById_should_throw_exception() {
+        when(routeRepo.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> routeService.getById(1L));
+        verify(routeRepo, times(1)).findById(any(Long.class));
     }
 
     @Test
-    void post() {
+    void getRouteOfEmployee_should_return_list_of_routes() {
+        when(employeeRepo.findByIdWithRoute(any(Long.class))).thenReturn(Optional.of(employee));
+
+        List<RouteResponse> routeResponses = routeService.getRouteOfEmployee(1L);
+
+        verify(employeeRepo, times(1)).findByIdWithRoute(any(Long.class));
+        assertEquals(responses, routeResponses);
+    }
+
+    @Test
+    void getRouteOfEmployee_should_throw_exception() {
+        when(employeeRepo.findByIdWithRoute(any(Long.class))).thenReturn(Optional.empty());
+
+       assertThrows(NotFoundException.class, () -> routeService.getRouteOfEmployee(1L));
+        verify(employeeRepo, times(1)).findByIdWithRoute(any(Long.class));
+    }
+
+    @Test
+    void post_should_return_id() {
+        when()
     }
 
     @Test
