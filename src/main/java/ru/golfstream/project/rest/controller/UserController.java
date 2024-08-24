@@ -26,11 +26,13 @@ public class UserController {
     private final PurchaseService purchaseService;
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> getById(@PathVariable Long id){
         return ResponseEntity.ok(userService.getById(id));
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAll() {
         return ResponseEntity.ok(userService.getAll());
     }
@@ -48,11 +50,13 @@ public class UserController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> add(@Validated @RequestBody UserRequest request){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.post(request));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteById(@PathVariable Long id){
         userService.delete(id);
        return ResponseEntity.ok().build();
@@ -66,6 +70,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> edit(@PathVariable Long id, @Validated @RequestBody UserRequest request){
         return ResponseEntity.ok(userService.edit(id, request));
     }

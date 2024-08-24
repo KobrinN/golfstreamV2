@@ -22,7 +22,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
             "where c.id = :id", nativeQuery = true)
     List<Voucher> getVoucherOfClientDto(@Param("id") Long id);
 
-    @EntityGraph(value = "user-role-graph")
+    @EntityGraph(attributePaths = {"roles"})
+    @Query("SELECT u FROM User u where u.username = ?1")
     Optional<User> findByUsername(String username);
 }
 

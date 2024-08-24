@@ -1,8 +1,11 @@
 package ru.golfstream.project.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import ru.golfstream.project.entity.Role;
 import ru.golfstream.project.entity.User;
 import ru.golfstream.project.exception.exceptions.common.InvlaidFieldException;
 import ru.golfstream.project.exception.exceptions.common.NotFoundException;
@@ -13,8 +16,10 @@ import ru.golfstream.project.rest.dto.response.UserResponse;
 import ru.golfstream.project.rest.dto.request.UserRequest;
 import ru.golfstream.project.service.UserService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +28,7 @@ import java.util.regex.Pattern;
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper = new UserMapperImpl();
+    private final PasswordEncoder encoder;
 
 
     @Override
@@ -35,8 +41,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long post(UserRequest request) {
+        if (userRepo.findByUsername(request.getUsername()).isPresent()) throw new IllegalArgumentException("!User with this username already exist!");
+
         User user = userMapper.toModel(request);
-        user = userRepo.saveAndFlush(user);
+        user.setRegistrationDate(LocalDate.now());
+        user.setRoles(Set.of(Role.ROLE_ADMIN));
+        user.setPassword(encoder.encode(request.getPassword()));
+        user = userRepo.save(user);
+
         return user.getId();
     }
 
@@ -71,6 +83,4 @@ public class UserServiceImpl implements UserService {
         }
         return user.get();
     }
-
-
 }
