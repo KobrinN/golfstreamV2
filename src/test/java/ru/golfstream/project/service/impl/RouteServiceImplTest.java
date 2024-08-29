@@ -20,7 +20,9 @@ import ru.golfstream.project.rest.dto.response.RouteResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -119,7 +121,6 @@ class RouteServiceImplTest {
 
     @Test
     void post_should_return_id() {
-        when()
     }
 
     @Test

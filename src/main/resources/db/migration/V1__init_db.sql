@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS public.user
+CREATE TABLE IF NOT EXISTS public.users
 (
     id                bigserial    NOT NULL,
     username          varchar(255) NOT NULL,
@@ -91,7 +91,7 @@ ALTER TABLE IF EXISTS public.voucher
 
 ALTER TABLE IF EXISTS public.purchase
     ADD CONSTRAINT fk_client FOREIGN KEY (user_id)
-        REFERENCES public.user (id) MATCH SIMPLE
+        REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE;
 
@@ -104,6 +104,6 @@ ALTER TABLE IF EXISTS public.purchase
 
 alter table if exists public.role
     add constraint fk_user foreign key (user_id)
-        references public.user (id) match simple
+        references public.users (id) match simple
         on update cascade
         on delete cascade;
